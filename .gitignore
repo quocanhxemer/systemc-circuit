@@ -1,5 +1,7 @@
 .vscode/
 
+packages/
 systemc/
 temp/
 tmp/
+
