@@ -6,7 +6,7 @@ ifeq ($(strip $(CXX)),)
 	CXX := $(shell command -v g++ 2>/dev/null)
 endif
 
-dest_dir := $(shell pwd)/packages/systemc
+systemc_dir := $(shell pwd)/systemc
 
 
 all: systemc
@@ -14,7 +14,7 @@ all: systemc
 
 
 systemc: configure
-	mkdir systemc
+	mkdir -p $(systemc_dir)
 	cd temp/systemc/objdir && \
 	cmake -DCMAKE_INSTALL_PREFIX="$(dest_dir)" -DCMAKE_CXX_STANDARD=14  .. && \
 	make -j$$(nproc) 2> ../../../install.log && \
@@ -23,12 +23,12 @@ systemc: configure
 
 configure: temp
 	cd temp/systemc && \
-	mkdir objdir
+	mkdir -p objdir
 
 temp:
-	mkdir temp
+	mkdir -p temp
 	cd temp && git clone --depth 1 --branch 2.3.4 https://github.com/accellera-official/systemc.git
 
 clean:
-	rm -rf systemc
+	rm -rf packages
 	rm -rf temp
