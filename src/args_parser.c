@@ -70,7 +70,7 @@ int convert_int(char *c, long *l, char *message) {
 }
 
 // Is the number power of 2
-int isPotenzOf2(unsigned *number, char *name) {
+int isPotenzOf2(const unsigned *number, char *name) {
     if (*number < 2 || ((*number & (*number - 1)) != 0)) {
         fprintf(stderr, "%s should be Power of 2\n", name);
         fprintf(stderr,
@@ -121,16 +121,22 @@ int checkValid(unsigned l1CacheLines,
                 "L1 Cache Latency und L2 Cache Latency müssen kleiner als Memory Latency, ansonsten Cache-Nutzung macht keinen Sinn.\n");
         return 1;
     }
-    return 0;
-}
-
-int checkNameTraceFile(char *c) {
-    if (c == NULL) {
-        fprintf(stderr, "TraceFile Name müssen nicht NULL sein!\n");
-        return 1;
+    if (l1CacheLatency>=100 || l2CacheLatency>=100){
+        fprintf(stderr, "WARNING: L1 CacheLatency oder L2 CacheLatency ist größer als normal\n");
+    }
+    if (memoryLatency>=1000){
+        fprintf(stderr, "WARNING: MemoryLatency ist größer als normal\n");
     }
     return 0;
 }
+//
+//int checkNameTraceFile(char *c) {
+//    if (c == NULL) {
+//        fprintf(stderr, "TraceFile Name müssen nicht NULL sein!\n");
+//        return 1;
+//    }
+//    return 0;
+//}
 
 struct arguments *parse_args(int argc, char **argv) {
     const char *progname = argv[0];
@@ -340,7 +346,7 @@ struct arguments *parse_args(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
-    args->cycles = cycles;
+    args->cycles = (int)cycles;
     args->cacheLineSize = lineSize;
     args->l1CacheLines = l1Line;
     args->l2CacheLines = l2Line;
