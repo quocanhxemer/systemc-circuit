@@ -23,7 +23,6 @@ struct Result run_simulation(
         l1CacheLines, l2CacheLines, cacheLineSize,
         l1CacheLatency, l2CacheLatency, memoryLatency, 100
     );
-    sc_trace_file* tf = sc_create_vcd_trace_file(tracefile);
     LOG("numRequests : " << numRequests);
 
     sc_signal<uint32_t> address, input_data;
@@ -34,8 +33,11 @@ struct Result run_simulation(
     sc_signal<uint32_t> output;
     sc_signal<bool> done;
 
-    sc_trace(tf, output, "output");
-    sc_trace(tf, done, "done");
+    if (tracefile) {
+        sc_trace_file* tf = sc_create_vcd_trace_file(tracefile);
+        sc_trace(tf, output, "output");
+        sc_trace(tf, done, "done");
+    }
 
     controller.address.bind(address);
     controller.data_input.bind(input_data);
@@ -48,7 +50,7 @@ struct Result run_simulation(
 
     LOG("Starting simulation...");
     size_t i = 0;
-    for (i = 0; i < numRequests; i++) {
+    for (i = 0; i < numRequests && i <= cycles; i++) {
         address.write(requests[i].addr);
         input_data.write(requests[i].data);
         we.write(requests[i].we);
