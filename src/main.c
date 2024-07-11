@@ -49,6 +49,11 @@ int main(int argc, char *argv[]) {
         data.data,
         args->tracefile
     );
+    printf("Cycles: %zu\n", result.cycles);
+    printf("Cache Hits: %zu\n", result.hits);
+    printf("Cache Miss: %zu\n", result.misses);
+    printf("Primitive Gate Count: %zu\n", result.primitiveGateCount);
+
     free(args);
     return 0;
 }
