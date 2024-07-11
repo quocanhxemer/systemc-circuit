@@ -22,8 +22,8 @@ struct cache_line {
 
 // E.g. Cache line size = 4 bytes, write 0x02030405 to address 0x0002 (mapped to
 // cache line 0, offset 2) then CACHE will run 2 write operations
-// 1. data_input = 0x0203, address 0x0000, offset_from = 2, offset_to = 4
-// 2. data_input = 0x0405, address 0x0004, offset_from = 0, offset_to = 2
+// 1. data_input = [0x02, 0x03], address 0x0000, offset_from = 2, offset_to = 4
+// 2. data_input = [0x04, 0x05], address 0x0004, offset_from = 0, offset_to = 2
 SC_MODULE(CACHE) {
 
     sc_in<bool> clk;
