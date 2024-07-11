@@ -1,7 +1,12 @@
-.vscode/
-
 packages/
-systemc/
+
 temp/
 tmp/
+build/
 
+cache
+
+.idea/
+.vscode/
+
+out/

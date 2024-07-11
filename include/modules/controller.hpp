@@ -3,6 +3,7 @@
 
 #include "cache.hpp"
 #include "memory.hpp"
+
 #include <systemc>
 
 using namespace sc_core;
@@ -111,8 +112,8 @@ SC_MODULE(CONTROLLER) {
                 process();
                 running = false;
                 done->write(true);
-                wait(1);
-                done->write(false);
+                // sc_core::wait(1);
+                // done->write(false);
             }
         }
     }
@@ -205,6 +206,7 @@ SC_MODULE(CONTROLLER) {
         do {
             wait();
         } while (!l1_done.read());
+        // l1_done.write(false);
     }
 
     void l2_run() {
@@ -212,6 +214,7 @@ SC_MODULE(CONTROLLER) {
         do {
             wait();
         } while (!l2_done.read());
+        // l2_done.write(false);
     }
 
     void memory_run() {
@@ -219,6 +222,7 @@ SC_MODULE(CONTROLLER) {
         do {
             wait();
         } while (!memory_done.read());
+        // memory_done.write(false);
     }
 
     uint32_t get_aligned_address(uint32_t addr) {

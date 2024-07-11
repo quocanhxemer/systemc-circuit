@@ -3,7 +3,8 @@
 ## Authors
 
 - Ivan Logvynenko
-- (Please add your self)
+- Nguyen Quoc Anh Pham
+- Tuan Khang Nguyen
 
 ## Build
 
@@ -11,6 +12,7 @@
 
 * gcc/++ or clang/++
 * Make
+* SYSTEMC_HOME environment variable that contains path to your systemc installation
 
 ### Building
 
@@ -25,5 +27,4 @@ make
 ```
 and
 ``` bash
-./main
-```
+./cache

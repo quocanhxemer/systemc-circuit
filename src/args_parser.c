@@ -47,7 +47,7 @@ void print_help(const char *progname) {
 
 // nameCase
 // duplicateOption????
-void print_duplicate_option(const char *optionName) {
+void printDuplicateOption(const char *optionName) {
     fprintf(stderr, "Option %s wurde mehrmals eingegeben\n", optionName);
 }
 
@@ -70,7 +70,7 @@ int convert_int(char *c, long *l, char *message) {
 }
 
 // Is the number power of 2
-int is_potenz_of2(unsigned *number, char *name) {
+int isPotenzOf2(unsigned *number, char *name) {
     if (*number < 2 || ((*number & (*number - 1)) != 0)) {
         fprintf(stderr, "%s should be Power of 2\n", name);
         fprintf(stderr,
@@ -100,7 +100,7 @@ int convert_unsigned(char *c, unsigned long *l, char *message) {
 
 
 //Check if the Input for valid CacheLines, Latency (e.g. l1CacheLines must be smaller than l2CacheLines)
-int check_valid(unsigned l1CacheLines,
+int checkValid(unsigned l1CacheLines,
                unsigned l2CacheLines,
                unsigned l1CacheLatency,
                unsigned l2CacheLatency,
@@ -124,13 +124,13 @@ int check_valid(unsigned l1CacheLines,
     return 0;
 }
 
-//int checkNameTraceFile(char *c) {
-//    if (c == NULL) {
-//        fprintf(stderr, "TraceFile Name müssen nicht NULL sein!\n");
-//        return 1;
-//    }
-//    return 0;
-//}
+int checkNameTraceFile(char *c) {
+    if (c == NULL) {
+        fprintf(stderr, "TraceFile Name müssen nicht NULL sein!\n");
+        return 1;
+    }
+    return 0;
+}
 
 struct arguments *parse_args(int argc, char **argv) {
     const char *progname = argv[0];
@@ -138,6 +138,7 @@ struct arguments *parse_args(int argc, char **argv) {
         print_usage(progname);
         exit(EXIT_FAILURE);
     }
+
     int opt;
     int option_index = 0;
 
@@ -193,7 +194,7 @@ struct arguments *parse_args(int argc, char **argv) {
                     free(args);
                     exit(EXIT_FAILURE);
                 } else if (cycles_Flags) {// When Option Cycles duplicate
-                    print_duplicate_option("--cycles | -c ");
+                    printDuplicateOption("--cycles | -c ");
                     free(args);
                     exit(EXIT_FAILURE);
                 }
@@ -207,7 +208,7 @@ struct arguments *parse_args(int argc, char **argv) {
                 }
                 //Check duplication
                 if (lineSize_Flags) {
-                    print_duplicate_option("--cacheline-size");
+                    printDuplicateOption("--cacheline-size");
                     free(args);
                     exit(EXIT_FAILURE);
                 }
@@ -219,13 +220,13 @@ struct arguments *parse_args(int argc, char **argv) {
                     exit(EXIT_FAILURE);
                 }
                 //Check if l1Line is potenz of 2
-                if (is_potenz_of2((unsigned int *) &l1Line, "l1-lines") != 0) {
+                if (isPotenzOf2((unsigned int *) &l1Line, "l1-lines") != 0) {
                     free(args);
                     exit(EXIT_FAILURE);
                 }
                 //Check duplication
                 if (l1Line_Flags) {
-                    print_duplicate_option("--l1-lines");
+                    printDuplicateOption("--l1-lines");
                     free(args);
                     exit(EXIT_FAILURE);
                 }
@@ -237,13 +238,13 @@ struct arguments *parse_args(int argc, char **argv) {
                     exit(EXIT_FAILURE);
                 }
                 //Check if l2Line is potenz of 2
-                if (is_potenz_of2((unsigned int *) &l2Line, "l2-lines") != 0) {
+                if (isPotenzOf2((unsigned int *) &l2Line, "l2-lines") != 0) {
                     free(args);
                     exit(EXIT_FAILURE);
                 }
                 //Check duplication
                 if (l2Line_Flags) {
-                    print_duplicate_option("--l2-lines");
+                    printDuplicateOption("--l2-lines");
                     free(args);
                     exit(EXIT_FAILURE);
                 }
@@ -256,7 +257,7 @@ struct arguments *parse_args(int argc, char **argv) {
                 }
                 //Check duplicate
                 if (l1Latency_Flags) {
-                    print_duplicate_option("--l1-latency");
+                    printDuplicateOption("--l1-latency");
                     free(args);
                     exit(EXIT_FAILURE);
                 }
@@ -269,7 +270,7 @@ struct arguments *parse_args(int argc, char **argv) {
                 }
                 //Check Duplicate
                 if (l2Latency_Flags) {
-                    print_duplicate_option("--l2-latency");
+                    printDuplicateOption("--l2-latency");
                     free(args);
                     exit(EXIT_FAILURE);
                 }
@@ -282,7 +283,7 @@ struct arguments *parse_args(int argc, char **argv) {
                 }
                 //Check Duplicate
                 if (memLatency_Flags) {
-                    print_duplicate_option("--memory-latency");
+                    printDuplicateOption("--memory-latency");
                     free(args);
                     exit(EXIT_FAILURE);
                 }
@@ -290,7 +291,7 @@ struct arguments *parse_args(int argc, char **argv) {
                 break;
             case 't': //Case tf
                 if (tf_Flags) {
-                    print_duplicate_option("--tf");
+                    printDuplicateOption("--tf");
                     free(args);
                     exit(EXIT_FAILURE);
                 }
@@ -312,7 +313,7 @@ struct arguments *parse_args(int argc, char **argv) {
         }
         numRequest++;
     }
-    if (check_valid(l1Line, l2Line, l1Latency, l2Latency, memLatency) != 0) {
+    if (checkValid(l1Line, l2Line, l1Latency, l2Latency, memLatency) != 0) {
         free(args);
         exit(EXIT_FAILURE);
     }

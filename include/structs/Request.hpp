@@ -1,13 +1,13 @@
-#ifndef REQUEST
-#define REQUEST
+#ifndef REQUEST_HPP
+#define REQUEST_HPP
 
-#include <cstdint>
+#include <stdint.h>
 
 struct Request {
     uint32_t addr;
     uint32_t data;
 
     int we;
-} Request;
+};
 
-#endif // !REQUEST
+#endif 
