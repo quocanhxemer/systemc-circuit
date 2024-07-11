@@ -70,7 +70,7 @@ struct csv_file_data csv_parse_file(const char *filename)
 	for (size_t index = 0; line != NULL && index < lines; index++, line = strtok(NULL, "\n"))
 	{
 		if (line == "") {
-			fprintf(stderr, "Skipping empty line # %d\n", index);
+			fprintf(stderr, "Skipping empty line # %ld\n", index);
             continue;
 		}
 		char access_type;
