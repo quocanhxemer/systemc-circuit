@@ -48,7 +48,8 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
 
     LOG("Starting simulation...");
     size_t i = 0;
-    for (i = 0; i < numRequests && i <= cycles; i++) {
+    int cycles_count = 0;
+    for (i = 0; i < numRequests; i++) {
         address.write(requests[i].addr);
         input_data.write(requests[i].data);
         we.write(requests[i].we);
@@ -61,7 +62,7 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
 
         do {
             sc_start(clk.period());
-        } while (!controller.done.read());
+        } while (cycles_count++ < cycles && !controller.done.read());
         controller.done.write(false);
         ILOG("Result: " << controller.data_output.read());
 
