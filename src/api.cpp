@@ -59,14 +59,18 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
 
         do {
             sc_start(clk.period());
-        } while (cycles_count++ < cycles && !controller.done.read());
+        } while (cycles_count < cycles && !controller.done.read());
+
+        if (cycles_count++ >= cycles) {
+            break;
+        }
         controller.done.write(false);
         ILOG("Result: " << controller.data_output.read());
 
         LOG("finished cycle");
     }
 
-    result.cycles = i;
+    result.cycles = cycles_count;
 
     result.primitiveGateCount = controller.gates_count;
 
