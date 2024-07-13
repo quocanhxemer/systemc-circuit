@@ -42,6 +42,7 @@ struct Result run_simulation(
         sc_trace_file* tf = sc_create_vcd_trace_file(tracefile);
         sc_trace(tf, output, "output");
         sc_trace(tf, done, "done");
+        sc_close_vcd_trace_file(tf);
     }
 
     controller.address.bind(address);
