@@ -1,6 +1,7 @@
 #ifndef CACHE_HPP
 #define CACHE_HPP
 
+#include "gates_count.hpp"
 #include <systemc>
 
 using namespace sc_core;
@@ -42,6 +43,8 @@ SC_MODULE(CACHE) {
 
     cache_line *caches;
 
+    int gates_count;
+
     unsigned cache_lines;
     unsigned cache_line_size;
     unsigned latency;
@@ -64,6 +67,8 @@ SC_MODULE(CACHE) {
             caches[i].hits_count = 0;
             caches[i].misses_count = 0;
         }
+
+        gates_count = get_gates_count();
 
         SC_CTHREAD(run, this->clk.pos());
 
@@ -135,16 +140,43 @@ SC_MODULE(CACHE) {
         data_output->write(output);
     }
 
+    // n has to be power of 2
+    int log2(int n) {
+        int res = 0;
+        while (n != 1) {
+            n >>= 1;
+            res++;
+        }
+        return res;
+    }
+
+    int offset_bits_count() { return log2(cache_line_size); }
+
+    int index_bits_count() { return log2(cache_lines); }
+
+    int tag_bits_count() {
+        return 32 - offset_bits_count() - index_bits_count();
+    }
+
+    int get_gates_count() {
+        // Comparing tags for hits/misses logics
+        int tags_compare = gates_count::COMPARE_BIT * tag_bits_count();
+        int storage =
+            gates_count::STORE_BIT * 8 * cache_lines * cache_line_size;
+        int read = gates_count::READ_BIT * 8 * cache_lines * cache_line_size;
+        int multiplexers = gates_count::gates_count_multiplexer(cache_lines);
+        int controller = gates_count::CONTROLL_LOGIC;
+
+        return tags_compare + storage + read + multiplexers + controller;
+    }
+
     // Write back after read - cache miss. Has no latency
-    // TODO: not much of systemc spirit (?)
     void write_back() { write_to_cache_line(cache_line_of(address->read())); }
 
-    // TODO: bit shifts modulo
     unsigned cache_line_of(uint32_t adr) {
         return (adr % cache_line_size) % cache_lines;
     }
 
-    // TODO: bit shifts modulo
     uint32_t tag_of(uint32_t adr) {
         return adr / cache_line_size / cache_lines;
     }

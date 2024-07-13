@@ -20,6 +20,8 @@ SC_MODULE(CONTROLLER) {
     sc_out<uint32_t> data_output;
     sc_out<bool> done;
 
+    int gates_count;
+
     unsigned cacheLineSize;
     uint32_t data_output_temp;
 
@@ -90,6 +92,8 @@ SC_MODULE(CONTROLLER) {
         memory.trigger.bind(memory_trigger);
         memory.data_output.bind(memory_output);
         memory.done.bind(memory_done);
+
+        gates_count = l1.gates_count + l2.gates_count;
 
         SC_CTHREAD(run, this->clk.pos());
 
