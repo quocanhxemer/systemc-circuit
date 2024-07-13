@@ -129,14 +129,35 @@ int checkValid(unsigned l1CacheLines,
     }
     return 0;
 }
-//
-//int checkNameTraceFile(char *c) {
-//    if (c == NULL) {
-//        fprintf(stderr, "TraceFile Name müssen nicht NULL sein!\n");
-//        return 1;
-//    }
-//    return 0;
-//}
+
+//TODO: Check valid filename
+//nameForMessage: (Tracefile or input file)
+int is_file_name_valid(const char *filename, const char* nameForMessage) {
+    const char* invalid_chars="<>:\"/\\|?*";
+    char *t;
+    if ((t=strpbrk(filename, invalid_chars))!=0){
+        fprintf(stderr, "%s hat invalid Characters: %c\n", nameForMessage,*t);
+        return 1;
+    }
+    if (strlen(filename)>255){
+        fprintf(stderr, "%s Name ist zu lang!\n", nameForMessage);
+        return 1;
+    }
+    return 0;
+}
+//TODO: check file can read
+int can_read_file(const char *filename){
+    return 0;
+}
+//TODO: check file can write
+int can_write_file(const char *filename){
+    return 0;
+}
+//TODO: check valid path
+int is_valid_path(const char* path){
+    return 0;
+}
+
 
 struct arguments *parse_args(int argc, char **argv) {
     const char *progname = argv[0];
@@ -304,7 +325,6 @@ struct arguments *parse_args(int argc, char **argv) {
 //                if (checkNameTraceFile(optarg) != 0) {
 //                    exit(EXIT_FAILURE);
 //                }
-                printf("%s", optarg);
                 traceFile= optarg;
                 tf_Flags = true;
                 break;
@@ -357,6 +377,7 @@ struct arguments *parse_args(int argc, char **argv) {
 //        args->tracefile = traceFile;
 //    }
     if (traceFile != NULL && strlen(traceFile) != 0){
+
         args->tracefile = traceFile;
     }
     args->input_file = fileInputName;
