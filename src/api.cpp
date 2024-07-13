@@ -29,11 +29,12 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
     sc_signal<uint32_t> output;
     sc_signal<bool> done;
 
+    sc_trace_file *tf = nullptr;
+
     if (tracefile) {
-        sc_trace_file *tf = sc_create_vcd_trace_file(tracefile);
+        tf = sc_create_vcd_trace_file(tracefile);
         sc_trace(tf, output, "output");
         sc_trace(tf, done, "done");
-        sc_close_vcd_trace_file(tf);
     }
 
     controller.address.bind(address);
@@ -85,6 +86,10 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
 
     // result.hits = controller.l1.hits_count + controller.l2.hits_count;
     // result.hits = controller.l1.misses_count + controller.l2.misses_count;
+
+    if (tf) {
+        sc_close_vcd_trace_file(tf);
+    }
 
     return result;
 }
