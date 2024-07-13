@@ -2,9 +2,6 @@
 
 #include "debugKit.hpp"
 
-const int GATES_COUNT_STORE_BIT = 4;
-const int GATES_COUNT_READ_BIT = 2;
-const int GATES_COUNT_ADDITION_32_BITS = 150;
 const int MEMORY_SIZE = 100;
 
 struct Result run_simulation(int cycles, unsigned l1CacheLines,
@@ -71,17 +68,7 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
 
     result.cycles = i;
 
-    int caches_storage = (l1CacheLines + l2CacheLines) * cacheLineSize;
-    int gates_count_for_storage =
-        (caches_storage + MEMORY_SIZE) * 8 * GATES_COUNT_STORE_BIT;
-    int gates_count_for_read =
-        (caches_storage + MEMORY_SIZE) * 8 * GATES_COUNT_READ_BIT;
-    // we need 3 addition units in l1, l2 and memory for caculating tags, cache
-    // indices and addresses to read/store data
-    int gates_count_addition = GATES_COUNT_ADDITION_32_BITS * 3;
-
-    result.primitiveGateCount =
-        gates_count_for_storage + gates_count_for_read + gates_count_addition;
+    result.primitiveGateCount = controller.gates_count;
 
     LOG("Total cycles: " << result.cycles);
 
