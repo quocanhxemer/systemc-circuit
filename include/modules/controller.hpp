@@ -30,7 +30,7 @@ SC_MODULE(CONTROLLER) {
 
     MEMORY memory;
 
-    bool hit = false;
+    bool hit;
 
     bool running;
 
@@ -106,7 +106,7 @@ SC_MODULE(CONTROLLER) {
     void detect_trigger() {
         while (true) {
             wait();
-            hit = false;
+            hit = true;
             running = true;
             data_output_temp = 0;
         }
@@ -193,16 +193,15 @@ SC_MODULE(CONTROLLER) {
     uint8_t *read() {
         l1_run();
         if (l1_status.read() == CACHE_HIT) {
-            hit = true;
             return l1_output.read();
         }
         l2_run();
         if (l2_status.read() == CACHE_HIT) {
-            hit = true;
             aligned_data_input.write(l2_output.read());
             l1.write_back();
             return l2_output.read();
         }
+        hit = false;
         memory_run();
         aligned_data_input.write(memory_output.read());
         l2.write_back();

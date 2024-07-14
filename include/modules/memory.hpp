@@ -38,6 +38,9 @@ SC_MODULE(MEMORY) {
         this->clk.bind(clk);
 
         data = new uint8_t[memory_size];
+        for (int i = 0; i < memory_size; i++) {
+            data[i] = 0;
+        }
 
         SC_CTHREAD(run, this->clk.pos());
 

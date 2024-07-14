@@ -46,6 +46,7 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
     LOG("Starting simulation...");
     size_t i = 0;
     int cycles_count = 0;
+    sc_start(SC_ZERO_TIME);
     for (i = 0; i < numRequests; i++) {
         address.write(requests[i].addr);
         input_data.write(requests[i].data);

@@ -63,6 +63,9 @@ SC_MODULE(CACHE) {
         caches = new cache_line[cache_lines];
         for (int i = 0; i < cache_lines; i++) {
             caches[i].data = new uint8_t[cache_line_size];
+            for (int k = 0; k < cache_line_size; k++) {
+                caches[i].data[k] = 0;
+            }
             caches[i].valid = false;
             caches[i].hits_count = 0;
             caches[i].misses_count = 0;
@@ -174,7 +177,7 @@ SC_MODULE(CACHE) {
     void write_back() { write_to_cache_line(cache_line_of(address->read())); }
 
     unsigned cache_line_of(uint32_t adr) {
-        return (adr % cache_line_size) % cache_lines;
+        return (adr / cache_line_size) % cache_lines;
     }
 
     uint32_t tag_of(uint32_t adr) {
