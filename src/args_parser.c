@@ -2,9 +2,9 @@
 // #include <stddef.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
+#include <sys/stat.h>
 #include <string.h>
-
+#include <unistd.h>
 #include <getopt.h>
 #include <errno.h>
 #include <limits.h>
@@ -121,10 +121,10 @@ int checkValid(unsigned l1CacheLines,
                 "L1 Cache Latency und L2 Cache Latency müssen kleiner als Memory Latency, ansonsten Cache-Nutzung macht keinen Sinn.\n");
         return 1;
     }
-    if (l1CacheLatency>=100 || l2CacheLatency>=100){
+    if (l1CacheLatency >= 100 || l2CacheLatency >= 100) {
         fprintf(stderr, "WARNING: L1 CacheLatency oder L2 CacheLatency ist größer als normal\n");
     }
-    if (memoryLatency>=1000){
+    if (memoryLatency >= 1000) {
         fprintf(stderr, "WARNING: MemoryLatency ist größer als normal\n");
     }
     return 0;
@@ -132,30 +132,71 @@ int checkValid(unsigned l1CacheLines,
 
 //TODO: Check valid filename
 //nameForMessage: (Tracefile or input file)
-int is_file_name_valid(const char *filename, const char* nameForMessage) {
-    const char* invalid_chars="<>:\"/\\|?*";
+int is_file_name_valid(const char *filename, const char *nameForMessage) {
+    const char *invalid_chars = "<>:\"/\\|?*";
     char *t;
-    if ((t=strpbrk(filename, invalid_chars))!=0){
-        fprintf(stderr, "%s hat invalid Characters: %c\n", nameForMessage,*t);
+    if ((t = strpbrk(filename, invalid_chars)) != 0) {
+        fprintf(stderr, "ERROR: %s hat invalid Characters: %c\n", nameForMessage, *t);
         return 1;
     }
-    if (strlen(filename)>255){
-        fprintf(stderr, "%s Name ist zu lang!\n", nameForMessage);
+    if (strlen(filename) > 255) {
+        fprintf(stderr, "ERROR: %s Name ist zu lang!\n", nameForMessage);
         return 1;
     }
     return 0;
 }
-//TODO: check file can read
-int can_read_file(const char *filename){
-    return 0;
+
+int can_read_file(const char *filename) {
+    return (access(filename, R_OK) == 0);
 }
-//TODO: check file can write
-int can_write_file(const char *filename){
-    return 0;
+
+int can_write_file(const char *filename) {
+    return (access(filename, W_OK) ==0);
 }
 //TODO: check valid path
-int is_valid_path(const char* path){
+int is_valid_path(const char *path) {
     return 0;
+}
+
+//Check if the input file exists, is regular and readable
+int check_input_file(const char *filename) {
+    struct stat buffer;
+    //Check file exsts
+    if (stat(filename, &buffer)!=0) {
+        fprintf(stderr, "ERROR: Input File \"%s\" existiert nicht!\n", filename);
+        return 1;
+    }
+    //Check if filename is a regular file
+    else if (S_ISREG(buffer.st_mode)==0){
+        fprintf(stderr, "ERROR: Input File \"%s\" ist keiner normale File!\n", filename);
+        return 1;
+    }
+    //check if filename is readable
+    else if (!can_read_file(filename)) {
+        fprintf(stderr, "ERROR: Input File \"%s \" ist nicht lesbar\n", filename);
+        return 1;
+    }
+    return 0;
+}
+int check_trace_file(const char *filename){
+    struct stat buffer;
+    // if tracefile exists, then check if tracefile is readable and writeable
+    if (stat(filename, &buffer)==0){
+        if (!can_read_file(filename)){
+            fprintf(stderr, "ERROR: TraceFile \"%s \"ist nicht lesbar!\n", filename);
+            return 1;
+        }
+        else if (!can_write_file(filename)){
+            fprintf(stderr, "ERROR: TraceFile \"%s \"ist nicht schreibbar!\n", filename);
+            return 1;
+        }
+        return 0;
+    }
+    //if tracefile does not exist, then check valid path and filename
+    else{
+
+        return 0;
+    }
 }
 
 
@@ -325,7 +366,7 @@ struct arguments *parse_args(int argc, char **argv) {
 //                if (checkNameTraceFile(optarg) != 0) {
 //                    exit(EXIT_FAILURE);
 //                }
-                traceFile= optarg;
+                traceFile = optarg;
                 tf_Flags = true;
                 break;
             case 'h':
@@ -345,7 +386,7 @@ struct arguments *parse_args(int argc, char **argv) {
     }
     //Fail if missing the optional arguments (Eingabe Datei)
     if (optind == argc) {
-        fprintf(stderr, "%s: Es fehlt die positionale Argument (Eingabe Datei)\n>", progname);
+        fprintf(stderr, "%s: Es fehlt die positionale Argument (Eingabe Datei)\n", progname);
         print_usage(progname);
         free(args);
         exit(EXIT_FAILURE);
@@ -353,6 +394,10 @@ struct arguments *parse_args(int argc, char **argv) {
     //The first not optional arguments will be the name of Input file
     if (optind < argc) {
         fileInputName = argv[optind++];
+        //Check invalid input file
+        if (check_input_file(fileInputName) != 0) {
+            exit(EXIT_FAILURE);
+        }
         //inputFile_Flags = true;
         numRequest++;
     }
@@ -366,7 +411,7 @@ struct arguments *parse_args(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
-    args->cycles = (int)cycles;
+    args->cycles = (int) cycles;
     args->cacheLineSize = lineSize;
     args->l1CacheLines = l1Line;
     args->l2CacheLines = l2Line;
@@ -377,7 +422,9 @@ struct arguments *parse_args(int argc, char **argv) {
 //        args->tracefile = traceFile;
 //    }
     if (traceFile != NULL && strlen(traceFile) != 0){
-
+        if (check_trace_file(traceFile)!=0){
+            exit(EXIT_FAILURE);
+        }
         args->tracefile = traceFile;
     }
     args->input_file = fileInputName;
