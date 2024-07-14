@@ -225,7 +225,7 @@ int check_trace_file(char *filename) {
     newFilename[n + 1] = 'v';
     newFilename[n + 2] = 'c';
     newFilename[n + 3] = 'd';
-    newFilename[n + 4] = EOF;
+    newFilename[n + 4] = '\0';
 
     // if tracefile exists, then check if tracefile is readable and writeable
 
@@ -490,3 +490,4 @@ struct arguments *parse_args(int argc, char **argv) {
     args->input_file = fileInputName;
     return args;
 }
+//DEBUG
