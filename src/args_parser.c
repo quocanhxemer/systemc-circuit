@@ -49,7 +49,7 @@ void print_help(const char *progname) {
 // nameCase
 // duplicateOption????
 void printDuplicateOption(const char *optionName) {
-    fprintf(stderr, "Option %s wurde mehrmals eingegeben\n", optionName);
+    fprintf(stderr, "ERROR: Option %s wurde mehrmals eingegeben\n", optionName);
 }
 
 // try to convert input to Integer
@@ -58,13 +58,13 @@ int convert_int(char *c, long *l, char *message) {
     char *endptr;
     *l = strtol(c, &endptr, 10);
     if (endptr == c || *endptr != '\0') {
-        fprintf(stderr, "Invalid number in %s: %s could not be converted to integer\n", message, c);
+        fprintf(stderr, "ERROR: Invalid number in %s: %s could not be converted to integer\n", message, c);
         return 1;
     } else if (errno == ERANGE || *l > INT_MAX) {
-        fprintf(stderr, "Invalid number in %s: %s over- or underflows integer\n", message, c);
+        fprintf(stderr, "ERROR: Invalid number in %s: %s over- or underflows integer\n", message, c);
         return 1;
     } else if (*l <= 0) {
-        fprintf(stderr, "Invalid number in %s: must be positiv\n", message);
+        fprintf(stderr, "ERROR: Invalid number in %s: must be positiv\n", message);
         return 1;
     }
     return 0;
@@ -73,9 +73,9 @@ int convert_int(char *c, long *l, char *message) {
 // Is the number power of 2
 int isPotenzOf2(const unsigned *number, char *name) {
     if (*number < 2 || ((*number & (*number - 1)) != 0)) {
-        fprintf(stderr, "%s should be Power of 2\n", name);
+        fprintf(stderr, "ERROR: %s should be Power of 2\n", name);
         fprintf(stderr,
-                "Erklärung: 1 Cachezeile hat eine positive Integer Zahl Bits für Index-Bits, so die Anzahl von Cachezeilen muss die Potenz von 2 (pow(2, indexBit))\n");
+                "ERKLÄRUNG: 1 Cachezeile hat eine positive Integer Zahl Bits für Index-Bits, so die Anzahl von Cachezeilen muss die Potenz von 2 (größer oder gleich 2) (pow(2, indexBit))\n");
         return 1;
     }
     return 0;
@@ -87,13 +87,13 @@ int convert_unsigned(char *c, unsigned long *l, char *message) {
     char *endptr;
     *l = strtoul(c, &endptr, 10);
     if (endptr == c || *endptr != '\0') {
-        fprintf(stderr, "Invalid number in %s: %s could not be converted to unsigned\n", message, c);
+        fprintf(stderr, "ERROR: Invalid number in %s: %s could not be converted to unsigned\n", message, c);
         return 1;
     } else if (errno == ERANGE || *l > UINT_MAX) {
-        fprintf(stderr, "Invalid number in %s: %s over- or underflow unsigned integer\n", message, c);
+        fprintf(stderr, "ERROR: Invalid number in %s: %s over- or underflow unsigned integer\n", message, c);
         return 1;
     } else if (*l <= 0) {
-        fprintf(stderr, "Invalid number in %s: must be positiv\n", message);
+        fprintf(stderr, "ERROR: Invalid number in %s: must be positiv\n", message);
         return 1;
     }
     return 0;
@@ -107,19 +107,21 @@ int checkValid(unsigned l1CacheLines,
                unsigned l2CacheLatency,
                unsigned memoryLatency) {
     if (l1CacheLines >= l2CacheLines) {
-        fprintf(stderr, "L1 Cache Lines müssen kleiner als L2 Cache Lines\n");
+        fprintf(stderr, "ERROR: L1 Cache Lines müssen kleiner als L2 Cache Lines\n");
         fprintf(stderr,
                 "ERKLÄRUNG: Wenn L1 Caches gleich oder mehr Lines als L2, dann L1 Cache hat größere Größe als L2 Cache, im Widerspruch mit Inclusiv Cache\n");
         return 1;
-    }
-    if (l1CacheLatency >= l2CacheLatency) {
+    } else if (l1CacheLatency >= l2CacheLatency) {
         fprintf(stderr,
-                "L1 Cache Latency müssen kleiner als L2 Cache Latency, da Cache inklusiv ist. (Alles in L1 Cache kann man auch in L2 Cache finden)\n");
+                "ERROR: L1 Cache Latency müssen kleiner als L2 Cache Latency, da Cache inklusiv ist. (Alles in L1 Cache kann man auch in L2 Cache finden)\n");
         return 1;
-    }
-    if (l2CacheLatency >= memoryLatency || l1CacheLatency >= memoryLatency) {
+    } else if (l2CacheLatency >= memoryLatency) {
         fprintf(stderr,
-                "L1 Cache Latency und L2 Cache Latency müssen kleiner als Memory Latency, ansonsten Cache-Nutzung macht keinen Sinn.\n");
+                "ERROR: L2 Cache Latency müssen kleiner als Memory Latency, ansonsten Cache-Nutzung macht keinen Sinn.\n");
+        return 1;
+    } else if (l1CacheLatency >= memoryLatency) {
+        fprintf(stderr,
+                "ERROR: L1 Cache Latency müssen kleiner als Memory Latency, ansonsten Cache-Nutzung macht keinen Sinn.\n");
         return 1;
     }
     if (l1CacheLatency >= 100 || l2CacheLatency >= 100) {
@@ -158,7 +160,6 @@ bool can_write_file(const char *filename) {
 //implement strdup allocate (like strcpy)
 char *strdup1(const char *c) {
     char *dup = malloc(strlen(c) + 1);
-
     if (dup != NULL)
         strcpy(dup, c);
     return dup;
@@ -177,14 +178,14 @@ bool does_file_exist(const char *filename) {
 char *get_directory(const char *filepath) {
     char *path_copy = strdup1(filepath);
     if (!path_copy) {
-        perror("strdup");
+        perror("ERROR: Problem bei Allocate strdup (Copy tracefilepath)");
         exit(EXIT_FAILURE);
     }
     char *dir = dirname(path_copy);
     char *result = strdup1(dir);
     free(path_copy);
     if (!result) {
-        perror("strdup");
+        perror("ERROR: Problem bei Allocate strdup (Copy tracefilepath)");
         exit(EXIT_FAILURE);
     }
     return result;
@@ -213,7 +214,7 @@ int check_input_file(const char *filename) {
 
 int check_trace_file(char *filename) {
     //I want to add .vcd at the end, so is strlen(filename)+4<= PATH_MAX
-    if (strlen(filename)+4 > PATH_MAX) {
+    if (strlen(filename) + 4 > PATH_MAX) {
         fprintf(stderr, "ERROR: TraceFile Name(Path Name) ist zu lang");
         return 1;
     }
@@ -231,7 +232,7 @@ int check_trace_file(char *filename) {
 
     if (does_file_exist(newFilename)) {
         if (!can_write_file(newFilename)) {
-            fprintf(stderr, "ERROR: TraceFile \"%s \"ist nicht schreibbar!\n", newFilename);
+            fprintf(stderr, "ERROR: TraceFile \"%s\"ist nicht schreibbar!\n", newFilename);
             return 1;
         }
         return 0;
@@ -240,6 +241,7 @@ int check_trace_file(char *filename) {
     else {
         char *directory = get_directory(newFilename);
         //if the directory exists, then check, if the filename is valid or not
+
         if (does_dir_exist(directory)) {
             char *dup_filename = strdup1(filename);
             char *only_filename = basename(dup_filename);
@@ -490,4 +492,7 @@ struct arguments *parse_args(int argc, char **argv) {
     args->input_file = fileInputName;
     return args;
 }
-//DEBUG
+////DEBUG
+//int main(int argc, char* args[]){
+//    check_trace_file("//file1");
+//}
