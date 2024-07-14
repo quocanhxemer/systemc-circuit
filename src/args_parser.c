@@ -101,7 +101,8 @@ int convert_unsigned(char *c, unsigned long *l, char *message) {
 
 
 //Check if the Input for valid CacheLines, Latency (e.g. l1CacheLines must be smaller than l2CacheLines)
-int checkValid(unsigned l1CacheLines,
+int checkValid(int cycles,
+               unsigned l1CacheLines,
                unsigned l2CacheLines,
                unsigned l1CacheLatency,
                unsigned l2CacheLatency,
@@ -124,8 +125,14 @@ int checkValid(unsigned l1CacheLines,
                 "ERROR: L1 Cache Latency müssen kleiner als Memory Latency, ansonsten Cache-Nutzung macht keinen Sinn.\n");
         return 1;
     }
-    if (l1CacheLatency >= 100 || l2CacheLatency >= 100) {
-        fprintf(stderr, "WARNING: L1 CacheLatency oder L2 CacheLatency ist größer als normal\n");
+    if (l1CacheLatency>cycles){
+        fprintf(stderr, "WARNING: L1 Latency ist größer als cycles, deswegen kann keine Requests bearbeitet werden\n");
+    }
+    if (l1CacheLatency >= 100) {
+        fprintf(stderr, "WARNING: L1 CacheLatency ist größer als normal\n");
+    }
+    if (l2CacheLatency>=100){
+        fprintf(stderr, "WARNING: L1 CacheLatency ist größer als normal\n");
     }
     if (memoryLatency >= 1000) {
         fprintf(stderr, "WARNING: MemoryLatency ist größer als normal\n");
@@ -442,7 +449,7 @@ struct arguments *parse_args(int argc, char **argv) {
         }
         numRequest++;
     }
-    if (checkValid(l1Line, l2Line, l1Latency, l2Latency, memLatency) != 0) {
+    if (checkValid((int)cycles, l1Line, l2Line, l1Latency, l2Latency, memLatency) != 0) {
         free(args);
         exit(EXIT_FAILURE);
     }
