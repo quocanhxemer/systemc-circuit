@@ -8,6 +8,7 @@
 #include <getopt.h>
 #include <errno.h>
 #include <limits.h>
+#include <libgen.h>
 #include "../include/args_parser.h"
 
 const char *help_msg =
@@ -146,59 +147,118 @@ int is_file_name_valid(const char *filename, const char *nameForMessage) {
     return 0;
 }
 
-int can_read_file(const char *filename) {
-    return (access(filename, R_OK) == 0);
+bool can_read_file(const char *filename) {
+    return (access(filename, R_OK) != -1);
 }
 
-int can_write_file(const char *filename) {
-    return (access(filename, W_OK) ==0);
+bool can_write_file(const char *filename) {
+    return (access(filename, W_OK) != -1);
 }
-//TODO: check valid path
-int is_valid_path(const char *path) {
-    return 0;
+
+//implement strdup allocate (like strcpy)
+char *strdup1(const char *c) {
+    char *dup = malloc(strlen(c) + 1);
+
+    if (dup != NULL)
+        strcpy(dup, c);
+    return dup;
+}
+
+bool does_dir_exist(const char *directory) {
+    struct stat buffer;
+    return (stat(directory, &buffer) == 0 && S_ISDIR(buffer.st_mode));
+}
+
+bool does_file_exist(const char *filename) {
+    struct stat buffer;
+    return (stat(filename, &buffer) == 0);
+}
+
+char *get_directory(const char *filepath) {
+    char *path_copy = strdup1(filepath);
+    if (!path_copy) {
+        perror("strdup");
+        exit(EXIT_FAILURE);
+    }
+    char *dir = dirname(path_copy);
+    char *result = strdup1(dir);
+    free(path_copy);
+    if (!result) {
+        perror("strdup");
+        exit(EXIT_FAILURE);
+    }
+    return result;
 }
 
 //Check if the input file exists, is regular and readable
 int check_input_file(const char *filename) {
     struct stat buffer;
-    //Check file exsts
-    if (stat(filename, &buffer)!=0) {
+    //Check file exists
+    if (stat(filename, &buffer) != 0) {
         fprintf(stderr, "ERROR: Input File \"%s\" existiert nicht!\n", filename);
         return 1;
     }
-    //Check if filename is a regular file
-    else if (S_ISREG(buffer.st_mode)==0){
+        //Check if filename is a regular file
+    else if (S_ISREG(buffer.st_mode) == 0) {
         fprintf(stderr, "ERROR: Input File \"%s\" ist keiner normale File!\n", filename);
         return 1;
     }
-    //check if filename is readable
+        //check if filename is readable
     else if (!can_read_file(filename)) {
         fprintf(stderr, "ERROR: Input File \"%s \" ist nicht lesbar\n", filename);
         return 1;
     }
     return 0;
 }
-int check_trace_file(const char *filename){
-    struct stat buffer;
+
+int check_trace_file(char *filename) {
+    //I want to add .vcd at the end, so is strlen(filename)+4<= PATH_MAX
+    if (strlen(filename)+4 > PATH_MAX) {
+        fprintf(stderr, "ERROR: TraceFile Name(Path Name) ist zu lang");
+        return 1;
+    }
+    //filename has .vcd at the end -> append filename to the end
+    size_t n = strlen(filename);
+    char newFilename[n + 5];
+    strncpy(newFilename, filename, n);
+    newFilename[n] = '.';
+    newFilename[n + 1] = 'v';
+    newFilename[n + 2] = 'c';
+    newFilename[n + 3] = 'd';
+    newFilename[n + 4] = EOF;
+
     // if tracefile exists, then check if tracefile is readable and writeable
-    if (stat(filename, &buffer)==0){
-        if (!can_read_file(filename)){
-            fprintf(stderr, "ERROR: TraceFile \"%s \"ist nicht lesbar!\n", filename);
-            return 1;
-        }
-        else if (!can_write_file(filename)){
-            fprintf(stderr, "ERROR: TraceFile \"%s \"ist nicht schreibbar!\n", filename);
+
+    if (does_file_exist(newFilename)) {
+        if (!can_write_file(newFilename)) {
+            fprintf(stderr, "ERROR: TraceFile \"%s \"ist nicht schreibbar!\n", newFilename);
             return 1;
         }
         return 0;
     }
-    //if tracefile does not exist, then check valid path and filename
-    else{
+        //if tracefile does not exist, then check valid path and filename
+    else {
+        char *directory = get_directory(newFilename);
+        //if the directory exists, then check, if the filename is valid or not
+        if (does_dir_exist(directory)) {
+            char *dup_filename = strdup1(filename);
+            char *only_filename = basename(dup_filename);
+            //Check if tracefile has valid name
+            if (is_file_name_valid(only_filename, "TraceFile Name") != 0) {
+                free(dup_filename);
+                free(directory);
+                return 1;
+            }
+            free(directory);
+            return 0;
+        } else {
+            fprintf(stderr, "ERROR: Directory \"%s\" aus TraceFile Path existiert nicht!\n", directory);
+            free(directory);
+            return 1;
+        }
 
-        return 0;
     }
 }
-
 
 struct arguments *parse_args(int argc, char **argv) {
     const char *progname = argv[0];
@@ -421,8 +481,8 @@ struct arguments *parse_args(int argc, char **argv) {
 //    if (tf_Flags && traceFile != NULL) {
 //        args->tracefile = traceFile;
 //    }
-    if (traceFile != NULL && strlen(traceFile) != 0){
-        if (check_trace_file(traceFile)!=0){
+    if (traceFile != NULL && strlen(traceFile) != 0) {
+        if (check_trace_file(traceFile) != 0) {
             exit(EXIT_FAILURE);
         }
         args->tracefile = traceFile;

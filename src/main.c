@@ -19,9 +19,9 @@ extern struct Result run_simulation(
         const char *tracefile
 );
 
+
 int main(int argc, char *argv[]) {
     struct arguments* args = parse_args(argc, argv);
-
     printf("Einstellungen:\n");
     printf("  cycles: %d\n", args->cycles);
     printf("  cacheline_size: %d\n", args->cacheLineSize);
