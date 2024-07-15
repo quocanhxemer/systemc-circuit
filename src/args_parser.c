@@ -140,17 +140,16 @@ int checkValid(int cycles,
     return 0;
 }
 
-//TODO: Check valid filename
-//nameForMessage: (Tracefile or input file)
+//check valid filename for Tracefile
 int is_file_name_valid(const char *filename, const char *nameForMessage) {
-    const char *invalid_chars = "<>:\"/\\|?*";
+    const char *invalid_chars = "<>:\"/\\|?*[]";
     char *t;
     if ((t = strpbrk(filename, invalid_chars)) != 0) {
-        fprintf(stderr, "ERROR: %s hat invalid Characters: %c\n", nameForMessage, *t);
+        fprintf(stderr, "ERROR: TraceFile \"%s\" hat invalid Characters: %c\n",filename, *t);
         return 1;
     }
     if (strlen(filename) > 255) {
-        fprintf(stderr, "ERROR: %s Name ist zu lang!\n", nameForMessage);
+        fprintf(stderr, "ERROR: TraceFile Name ist zu lang!\n");
         return 1;
     }
     return 0;
@@ -216,6 +215,13 @@ int check_input_file(const char *filename) {
         fprintf(stderr, "ERROR: Input File \"%s \" ist nicht lesbar\n", filename);
         return 1;
     }
+    //Check input file has extension .csv
+    //Pointer to last char '.' in filename
+    const char * extension= strrchr(filename, '.');
+    if (strcmp(extension, ".csv")!=0){
+        fprintf(stderr, "ERROR: Input File \"%s\" hat keine Extension \".csv\"!\n", filename);
+        return 1;
+    }
     return 0;
 }
 
@@ -248,9 +254,10 @@ int check_trace_file(char *filename) {
     else {
         char *directory = get_directory(newFilename);
         //if the directory exists, then check, if the filename is valid or not
-
         if (does_dir_exist(directory)) {
+            //strdup1 : ist nur strcpy mit malloc
             char *dup_filename = strdup1(filename);
+            //basename: filename
             char *only_filename = basename(dup_filename);
             //Check if tracefile has valid name
             if (is_file_name_valid(only_filename, "TraceFile Name") != 0) {
