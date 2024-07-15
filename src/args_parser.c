@@ -1,15 +1,4 @@
-#include <stdio.h>
-// #include <stddef.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <sys/stat.h>
-#include <string.h>
-#include <unistd.h>
-#include <getopt.h>
-#include <errno.h>
-#include <limits.h>
-#include <libgen.h>
-#include "../include/args_parser.h"
+#include "args_parser.h"
 
 const char *help_msg =
         "Positional arguments:\n"
