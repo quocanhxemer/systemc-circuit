@@ -51,12 +51,12 @@ struct csv_file_data csv_parse_file(const char *filename)
 	}
 	buf[st.st_size] = '\0'; // Null-terminate the buffer
 	// Count lines
-	size_t lines = 1;
+	size_t file_lines_count = 1;
 	for (char *p = buf; *p; p++)
 		if (*p == '\n')
-			lines++;
+			file_lines_count++;
 
-	struct Request *requests = malloc(sizeof(struct Request) * lines);
+	struct Request *requests = malloc(sizeof(struct Request) * file_lines_count);
 	if (requests == NULL)
 	{
 		fprintf(stderr, "Error allocating memory for requests\n");
@@ -65,14 +65,28 @@ struct csv_file_data csv_parse_file(const char *filename)
 		exit(EXIT_FAILURE);
 	}
 
+    size_t lines = 0;
+
 	// Parse buffer into requests
 	char *line = strtok(buf, "\n");
-	for (size_t index = 0; line != NULL && index < lines; index++, line = strtok(NULL, "\n"))
+
+	for (size_t index = 0; index < file_lines_count; index++, line = strtok(NULL, "\n"))
 	{
-		if (line == "") {
+		if (line == NULL || line[0] == '\0') {
 			fprintf(stderr, "Skipping empty line # %ld\n", index);
             continue;
 		}
+
+		// Skip comments
+		if (line [0] == '#') {
+            printf("Skipping comment line # %ld\n", index);
+            continue;
+        }
+
+		//walid lines counting
+		lines++;
+
+		//Parsing
 		char access_type;
 		char addr_data_str[40] = "";
 
@@ -114,6 +128,8 @@ struct csv_file_data csv_parse_file(const char *filename)
 			break;
 		}
 	}
+
+	printf("final lines: %zu\n", lines);
 
 	free(buf);
 	fclose(file);

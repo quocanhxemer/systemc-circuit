@@ -9,6 +9,7 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
                              unsigned l1CacheLatency, unsigned l2CacheLatency,
                              unsigned memoryLatency, size_t numRequests,
                              struct Request *requests, const char *tracefile) {
+
     struct Result result = {0};
 
     sc_clock clk("clk", 1, SC_SEC);
@@ -16,6 +17,7 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
     CONTROLLER controller("controller", clk, l1CacheLines, l2CacheLines,
                           cacheLineSize, l1CacheLatency, l2CacheLatency,
                           memoryLatency, MEMORY_SIZE);
+
     LOG("numRequests : " << numRequests);
 
     sc_signal<uint32_t> address, input_data;
@@ -52,8 +54,8 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
         input_data.write(requests[i].data);
         we.write(requests[i].we);
 
-        LOG("Request " << i << ": addr=" << requests[i].addr << ", data="
-                       << requests[i].data << ", we=" << requests[i].we);
+        LOG("Request " << i << ": addr=" << requests[i].addr << ", data=" << 
+                       requests[i].data << ", we=" << requests[i].we);
         LOG("Triggering...");
         trigger.write(!trigger.read());
         LOG("Waiting for response...");
@@ -62,9 +64,6 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
             sc_start(clk.period());
         } while (cycles_count++ < cycles && !controller.done.read());
 
-        if (cycles_count > cycles) {
-            break;
-        }
 
         // Only count hits/misses status for read access
         if (!we.read()) {
@@ -79,6 +78,10 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
         ILOG("Result: " << controller.data_output.read());
 
         LOG("finished cycle");
+        
+        if (cycles_count > cycles) {
+            break;
+        }
     }
 
     result.cycles = cycles_count;
