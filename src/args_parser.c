@@ -72,6 +72,9 @@ int convert_int(char *c, long *l, char *message) {
 
 // Is the number power of 2
 int isPotenzOf2(const unsigned *number, char *name) {
+    //Use bitshift to check if a number is power of 2
+    //eg. 16=(b10000) is power of 2 -> 15 = (b01111) => 16&15=0
+    //when (n & (n-1))!=0 and n>=2 then n is not power of 2
     if (*number < 2 || ((*number & (*number - 1)) != 0)) {
         fprintf(stderr, "ERROR: %s should be Power of 2\n", name);
         fprintf(stderr,
@@ -125,8 +128,9 @@ int checkValid(int cycles,
                 "ERROR: L1 Cache Latency müssen kleiner als Memory Latency, ansonsten Cache-Nutzung macht keinen Sinn.\n");
         return 1;
     }
+    //Warning but not invalid
     if (l1CacheLatency>cycles){
-        fprintf(stderr, "WARNING: L1 Latency ist größer als cycles, deswegen kann keine Requests bearbeitet werden\n");
+        fprintf(stderr, "WARNING: L1 Latency ist größer als cycles, deswegen kann wahrscheinlich keine Requests bearbeitet werden\n");
     }
     if (l1CacheLatency >= 100) {
         fprintf(stderr, "WARNING: L1 CacheLatency ist größer als normal\n");
@@ -144,54 +148,58 @@ int checkValid(int cycles,
 int is_file_name_valid(const char *filename, const char *nameForMessage) {
     const char *invalid_chars = "<>:\"/\\|?*[]";
     char *t;
+    //When filename contains invalid character
     if ((t = strpbrk(filename, invalid_chars)) != 0) {
         fprintf(stderr, "ERROR: TraceFile \"%s\" hat invalid Characters: %c\n",filename, *t);
         return 1;
     }
+    //When filename has valid length
     if (strlen(filename) > 255) {
         fprintf(stderr, "ERROR: TraceFile Name ist zu lang!\n");
         return 1;
     }
     return 0;
 }
-
+//check permission r (readable)  for filename
 bool can_read_file(const char *filename) {
     return (access(filename, R_OK) != -1);
 }
-
+//check permission w (writeable) for filename
 bool can_write_file(const char *filename) {
     return (access(filename, W_OK) != -1);
 }
 
 //implement strdup allocate (like strcpy)
+// Because i can't use strdup
 char *strdup1(const char *c) {
     char *dup = malloc(strlen(c) + 1);
     if (dup != NULL)
         strcpy(dup, c);
     return dup;
 }
-
+//check directory exists
 bool does_dir_exist(const char *directory) {
     struct stat buffer;
     return (stat(directory, &buffer) == 0 && S_ISDIR(buffer.st_mode));
 }
-
+//check file exists
 bool does_file_exist(const char *filename) {
     struct stat buffer;
     return (stat(filename, &buffer) == 0);
 }
-
+//try to get directory from path
 char *get_directory(const char *filepath) {
     char *path_copy = strdup1(filepath);
+    //fail by allocata strdup
     if (!path_copy) {
-        perror("ERROR: Problem bei Allocate strdup (Copy tracefilepath)");
+        perror("ERROR: Problem bei Allocate strdup (Copy tracefilepath) in Heap!");
         exit(EXIT_FAILURE);
     }
     char *dir = dirname(path_copy);
     char *result = strdup1(dir);
     free(path_copy);
     if (!result) {
-        perror("ERROR: Problem bei Allocate strdup (Copy tracefilepath)");
+        perror("ERROR: Problem bei Allocate strdup (Copy tracefilepath) in Heap!");
         exit(EXIT_FAILURE);
     }
     return result;
@@ -225,6 +233,7 @@ int check_input_file(const char *filename) {
     return 0;
 }
 
+//check valid the tracefile name: valid length,  has permission when file exists
 int check_trace_file(char *filename) {
     //I want to add .vcd at the end, so is strlen(filename)+4<= PATH_MAX
     if (strlen(filename) + 4 > PATH_MAX) {
@@ -234,6 +243,7 @@ int check_trace_file(char *filename) {
     //filename has .vcd at the end -> append filename to the end
     size_t n = strlen(filename);
     char newFilename[n + 5];
+    //newFilename has ".vcd" extensio
     strncpy(newFilename, filename, n);
     newFilename[n] = '.';
     newFilename[n + 1] = 'v';
@@ -241,9 +251,9 @@ int check_trace_file(char *filename) {
     newFilename[n + 3] = 'd';
     newFilename[n + 4] = '\0';
 
-    // if tracefile exists, then check if tracefile is readable and writeable
-
+    // if tracefile exists, then check if tracefile is writeable
     if (does_file_exist(newFilename)) {
+        fprintf(stderr, "WARNING: Du überschreibst eine existierte Datei!!!\n");
         if (!can_write_file(newFilename)) {
             fprintf(stderr, "ERROR: TraceFile \"%s\"ist nicht schreibbar!\n", newFilename);
             return 1;
@@ -307,6 +317,7 @@ struct arguments *parse_args(int argc, char **argv) {
     size_t numRequest = 0;
 
     //Request Flags: Überprüfen, welches Value von Cache eingegeben wurden.
+
     bool cycles_Flags = false;
     bool l1Line_Flags = false;
     bool l2Line_Flags = false;
