@@ -104,7 +104,7 @@ int convert_unsigned(char *c, unsigned long *l, char *message) {
 
 
 //Check if the Input for valid CacheLines, Latency (e.g. l1CacheLines must be smaller than l2CacheLines)
-int checkValid(int cycles,
+int checkValid(
                unsigned l1CacheLines,
                unsigned l2CacheLines,
                unsigned l1CacheLatency,
@@ -129,9 +129,9 @@ int checkValid(int cycles,
         return 1;
     }
     //Warning but not invalid
-    if (l1CacheLatency>cycles){
-        fprintf(stderr, "WARNING: L1 Latency ist größer als cycles, deswegen kann wahrscheinlich keine Requests bearbeitet werden\n");
-    }
+//    if (l1CacheLatency>cycles){
+//        fprintf(stderr, "WARNING: L1 Latency ist größer als cycles, deswegen kann wahrscheinlich keine Requests bearbeitet werden\n");
+//    }
     if (l1CacheLatency >= 100) {
         fprintf(stderr, "WARNING: L1 CacheLatency ist größer als normal\n");
     }
@@ -145,7 +145,7 @@ int checkValid(int cycles,
 }
 
 //check valid filename for Tracefile
-int is_file_name_valid(const char *filename, const char *nameForMessage) {
+int is_file_name_valid(const char *filename) {
     const char *invalid_chars = "<>:\"/\\|?*[]";
     char *t;
     //When filename contains invalid character
@@ -236,6 +236,14 @@ int check_input_file(const char *filename) {
 //check valid the tracefile name: valid length,  has permission when file exists
 int check_trace_file(char *filename) {
     //I want to add .vcd at the end, so is strlen(filename)+4<= PATH_MAX
+    if (filename==NULL){
+        fprintf(stderr, "ERROR: TraceFile Name ist null\n");
+        return 1;
+    }
+    if (strlen(filename)==0){
+        fprintf(stderr, "ERROR: Missing Arguments for --tf=\n");
+        return 1;
+    }
     if (strlen(filename) + 4 > PATH_MAX) {
         fprintf(stderr, "ERROR: TraceFile Name(Path Name) ist zu lang");
         return 1;
@@ -270,7 +278,7 @@ int check_trace_file(char *filename) {
             //basename: filename
             char *only_filename = basename(dup_filename);
             //Check if tracefile has valid name
-            if (is_file_name_valid(only_filename, "TraceFile Name") != 0) {
+            if (is_file_name_valid(only_filename) != 0) {
                 free(dup_filename);
                 free(directory);
                 return 1;
@@ -314,7 +322,7 @@ struct arguments *parse_args(int argc, char **argv) {
     unsigned long memLatency = DEFAULT_MEMORY_LATENCY_VALUE;
     char *traceFile = NULL;
     char *fileInputName = NULL;
-    size_t numRequest = 0;
+    //size_t numRequest = 0;
 
     //Request Flags: Überprüfen, welches Value von Cache eingegeben wurden.
 
@@ -465,9 +473,9 @@ struct arguments *parse_args(int argc, char **argv) {
                 free(args);
                 exit(EXIT_FAILURE);
         }
-        numRequest++;
+        //numRequest++;
     }
-    if (checkValid((int)cycles, l1Line, l2Line, l1Latency, l2Latency, memLatency) != 0) {
+    if (checkValid(l1Line, l2Line, l1Latency, l2Latency, memLatency) != 0) {
         free(args);
         exit(EXIT_FAILURE);
     }
@@ -486,7 +494,7 @@ struct arguments *parse_args(int argc, char **argv) {
             exit(EXIT_FAILURE);
         }
         //inputFile_Flags = true;
-        numRequest++;
+        //numRequest++;
     }
     //When optind is still smaller than argc, then fail
     if (optind < argc) {
@@ -508,7 +516,7 @@ struct arguments *parse_args(int argc, char **argv) {
 //    if (tf_Flags && traceFile != NULL) {
 //        args->tracefile = traceFile;
 //    }
-    if (traceFile != NULL && strlen(traceFile) != 0) {
+    if (tf_Flags) {
         if (check_trace_file(traceFile) != 0) {
             exit(EXIT_FAILURE);
         }
