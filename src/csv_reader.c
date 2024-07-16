@@ -129,7 +129,7 @@ struct csv_file_data csv_parse_file(const char *filename)
 		}
 	}
 
-	printf("final lines: %zu\n", lines);
+	// printf("final lines: %zu\n", lines);
 
 	free(buf);
 	fclose(file);
