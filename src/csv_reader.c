@@ -104,7 +104,7 @@ struct csv_file_data csv_parse_file(const char *filename)
 			if (sscanf(addr_data_str, "%19s", addr_str) != 1)
 				fail_with("Read request should contain only address, but found %s\n",
 						  line, file, buf, requests);
-			if (sscanf(addr_str, "%x", &addr) != 1 && sscanf(addr_str, "%u", &addr) != 1)
+			if (sscanf(addr_str, "0x%x", &addr) != 1 && sscanf(addr_str, "%u", &addr) != 1)
 				fail_with("Invalid address on line %s\n", line, file, buf, requests);
 			requests[index].addr = addr;
 			requests[index].data = 0;
