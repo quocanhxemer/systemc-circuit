@@ -2,30 +2,32 @@
 
 const char *help_msg =
         "Positional arguments:\n"
-        "<Dateiname>                                   — Die Eingabedatei, die die zu verarbeitenden Daten enthält\n"
+        "<Dateiname>  (default: %s)    — Die Eingabedatei, die die zu verarbeitenden Daten enthält\n"
         "\n"
         "Optional arguments:\n"
-        "-c <int> /--cycles <int>    (default :%d)     — Die Anzahl der Zyklen, die simuliert werden sollen.\n"
-        "--cacheline-size <unsigned> (default :%d)     — Die Größe einer Cachezeile in Byte.\n"
-        "--l1-lines <unsigned>       (default: %d)     — Die Anzahl der Cachezeilen des L1 Caches.\n"
-        "--l2-lines <unsigned>       (default: %d)     — Die Anzahl der Cachezeilen des L2 Caches.\n"
-        "--l1-latency <unsigned>     (default: %d)     — Die Latenzzeit des L1 Caches in Zyklen.\n"
-        "--l2-latency <unsigned>     (default: %d)     — Die Latenzzeit des L2 Caches in Zyklen.\n"
-        "--memory-latency <unsigned> (default: %d)     — Die Latenzzeit des Hauptspeichers in Zyklen.\n"
-        "--tf=<Dateiname>                              — Ausgabedatei für ein Tracefile mit allen Signalen\n"
-        "-h/--help                                     — Show help message\n";
+        "-c <int> /--cycles <int>    (default: %d)        — Die Anzahl der Zyklen, die simuliert werden sollen.\n"
+        "--cacheline-size <unsigned> (default: %d)          — Die Größe einer Cachezeile in Byte.\n"
+        "--l1-lines <unsigned>       (default: %d)          — Die Anzahl der Cachezeilen des L1 Caches.\n"
+        "--l2-lines <unsigned>       (default: %d)         — Die Anzahl der Cachezeilen des L2 Caches.\n"
+        "--l1-latency <unsigned>     (default: %d)          — Die Latenzzeit des L1 Caches in Zyklen.\n"
+        "--l2-latency <unsigned>     (default: %d)          — Die Latenzzeit des L2 Caches in Zyklen.\n"
+        "--memory-latency <unsigned> (default: %d)         — Die Latenzzeit des Hauptspeichers in Zyklen.\n"
+        "--tf=<Dateiname>                                  — Ausgabedatei für ein Tracefile mit allen Signalen\n"
+        "-h/--help                                         — Show help message\n";
 
 const char *USAGE_MSG =
-        "Usage: %s -h or --help          Show help message and exit\n";
+        "Usage: %s -h or --help         Show help message and exit\n"
+        "       %s                      Run Cache Simulation with default value\n";
 
 void print_usage(const char *progname) {
-    fprintf(stderr, USAGE_MSG, progname);
+    fprintf(stderr, USAGE_MSG, progname, progname);
 }
 
 // stderr and stdout
 void print_help(const char *progname) {
     print_usage(progname);
     fprintf(stderr, help_msg,
+            DEFAULT_INPUT_FILE_PATH,
             DEFAULT_CYCLES_VALUE,
             DEFAULT_CACHELINE_SIZE_VALUE,
             DEFAULT_L1_LINES_VALUE,
@@ -285,10 +287,10 @@ int check_trace_file(char *filename) {
 
 struct arguments *parse_args(int argc, char **argv) {
     const char *progname = argv[0];
-    if (argc == 1) {
-        print_usage(progname);
-        exit(EXIT_FAILURE);
-    }
+//    if (argc == 1) {
+//        print_usage(progname);
+//        exit(EXIT_FAILURE);
+//    }
 
     int opt;
     int option_index = 0;
@@ -469,12 +471,12 @@ struct arguments *parse_args(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
     //Fail if missing the optional arguments (Eingabe Datei)
-    if (optind == argc) {
-        fprintf(stderr, "%s: Es fehlt die positionale Argument (Eingabe Datei)\n", progname);
-        print_usage(progname);
-        free(args);
-        exit(EXIT_FAILURE);
-    }
+//    if (optind == argc) {
+//        fprintf(stderr, "%s: Es fehlt die positionale Argument (Eingabe Datei)\n", progname);
+//        print_usage(progname);
+//        free(args);
+//        exit(EXIT_FAILURE);
+//    }
     //The first not optional arguments will be the name of Input file
     if (optind < argc) {
         fileInputName = argv[optind++];
