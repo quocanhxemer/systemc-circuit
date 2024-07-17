@@ -37,6 +37,8 @@ SC_MODULE(MEMORY) {
           memory_size(memory_size) {
 
         this->clk.bind(clk);
+        
+        data_map.reserve(memory_size);
 
         SC_CTHREAD(run, this->clk.pos());
 
@@ -45,8 +47,8 @@ SC_MODULE(MEMORY) {
     }
 
     ~MEMORY() {
-        for (auto it = data_map.begin(); it != data_map.end(); it++) {
-            delete[] it->second;
+        for (auto& it : data_map) {
+            delete[] it.second;
         }
     }
 
