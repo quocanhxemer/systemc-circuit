@@ -2,6 +2,7 @@
 #define MEMORY_HPP
 
 #include <systemc>
+#include <unordered_map>
 
 using namespace sc_core;
 
@@ -20,7 +21,7 @@ SC_MODULE(MEMORY) {
     sc_out<uint8_t *> data_output;
     sc_out<bool> done;
 
-    uint8_t *data;
+    std::unordered_map<uint32_t, uint8_t *> data_map;
 
     unsigned block_size;
     unsigned latency;
@@ -37,18 +38,17 @@ SC_MODULE(MEMORY) {
 
         this->clk.bind(clk);
 
-        data = new uint8_t[memory_size];
-        for (int i = 0; i < memory_size; i++) {
-            data[i] = 0;
-        }
-
         SC_CTHREAD(run, this->clk.pos());
 
         SC_THREAD(detect_trigger);
         sensitive << trigger;
     }
 
-    ~MEMORY() { delete[] data; }
+    ~MEMORY() {
+        for (auto it = data_map.begin(); it != data_map.end(); it++) {
+            delete[] it->second;
+        }
+    }
 
     void detect_trigger() {
         while (true) {
@@ -74,6 +74,14 @@ SC_MODULE(MEMORY) {
     void access() {
         wait(latency);
 
+        // initialize the address block if it has never been accessed
+        if (data_map.find(address->read()) == data_map.end()) {
+            data_map[address->read()] = new uint8_t[block_size];
+            for (int i = 0; i < block_size; i++) {
+                data_map[address->read()][i] = 0;
+            }
+        }
+
         if (we->read()) {
             write();
         } else {
@@ -83,7 +91,7 @@ SC_MODULE(MEMORY) {
 
     void write() {
         for (int i = offset_from->read(); i < offset_to->read(); i++) {
-            data[address->read() + i] =
+            data_map[address->read()][i] =
                 data_input->read()[i - offset_from->read()];
         }
     }
@@ -91,7 +99,7 @@ SC_MODULE(MEMORY) {
     void read() {
         uint8_t *output = new u_int8_t[offset_to->read() - offset_from->read()];
         for (int i = offset_from->read(); i < offset_to->read(); i++) {
-            output[i - offset_from->read()] = data[address->read() + i];
+            output[i - offset_from->read()] = data_map[address->read()][i];
         }
         data_output->write(output);
     }
