@@ -310,7 +310,7 @@ struct arguments *parse_args(int argc, char **argv) {
     unsigned long l2Latency = DEFAULT_L2_LATENCY_VALUE;
     unsigned long memLatency = DEFAULT_MEMORY_LATENCY_VALUE;
     char *traceFile = NULL;
-    char *fileInputName = NULL;
+    char *fileInputName = DEFAULT_INPUT_FILE_PATH;
     //size_t numRequest = 0;
 
     //Request Flags: Überprüfen, welches Value von Cache eingegeben wurden.
