@@ -68,8 +68,14 @@ int isPotenzOf2(const unsigned *number, char *name) {
     //when (n & (n-1))!=0 and n>=2 then n is not power of 2
     if (*number < 2 || ((*number & (*number - 1)) != 0)) {
         fprintf(stderr, "ERROR: %s should be Power of 2\n", name);
-        fprintf(stderr,
-                "ERKLÄRUNG: 1 Cachezeile hat eine positive Integer Zahl Bits für Index-Bits, so die Anzahl von Cachezeilen muss die Potenz von 2 (größer oder gleich 2) (pow(2, indexBit))\n");
+        if (strcmp(name, "cacheline-size")==0){
+            fprintf(stderr,
+                    "ERKLÄRUNG: 1 Cacheline Size hat eine positive Integer Zahl Bits für Offset-Bits, so die Größe von CacheLineSize (in Byte) muss die Potenz von 2 (größer oder gleich 2) sein)\n");
+        }
+        else{
+            fprintf(stderr,
+                    "ERKLÄRUNG: 1 Cachezeile hat eine positive Integer Zahl Bits für Index-Bits, so die Anzahl von Cachezeilen muss die Potenz von 2 (größer oder gleich 2) sein)\n");
+        }
         return 1;
     }
     return 0;
@@ -360,9 +366,14 @@ struct arguments *parse_args(int argc, char **argv) {
                     free(args);
                     exit(EXIT_FAILURE);
                 }
+
                 //Check duplication
                 if (lineSize_Flags) {
                     printDuplicateOption("--cacheline-size");
+                    free(args);
+                    exit(EXIT_FAILURE);
+                }
+                if (isPotenzOf2((unsigned int *) &lineSize, "cacheline-size") != 0) {
                     free(args);
                     exit(EXIT_FAILURE);
                 }
