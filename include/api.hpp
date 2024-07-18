@@ -23,7 +23,7 @@ struct Result run_simulation(
     unsigned l2CacheLatency,
     unsigned memoryLatency,
     size_t numRequests,
-    struct Request *requests,
+    struct Request requests[],
     const char* tracefile = "tracefile"
 );
 

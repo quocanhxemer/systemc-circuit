@@ -8,7 +8,7 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
                              unsigned l2CacheLines, unsigned cacheLineSize,
                              unsigned l1CacheLatency, unsigned l2CacheLatency,
                              unsigned memoryLatency, size_t numRequests,
-                             struct Request *requests, const char *tracefile) {
+                             struct Request requests[], const char *tracefile) {
 
     struct Result result = {0};
 
@@ -17,8 +17,6 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
     CONTROLLER controller("controller", clk, l1CacheLines, l2CacheLines,
                           cacheLineSize, l1CacheLatency, l2CacheLatency,
                           memoryLatency, MEMORY_SIZE);
-
-    LOG("numRequests : " << numRequests);
 
     sc_signal<uint32_t> address, input_data;
     sc_signal<int> we;
@@ -45,7 +43,6 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
     controller.data_output.bind(output);
     controller.done.bind(done);
 
-    LOG("Starting simulation...");
     size_t i = 0;
     int cycles_count = 0;
     sc_start(SC_ZERO_TIME);
@@ -54,15 +51,19 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
         input_data.write(requests[i].data);
         we.write(requests[i].we);
 
-        LOG("Request " << i << ": addr=" << requests[i].addr << ", data=" << 
-                       requests[i].data << ", we=" << requests[i].we);
-        LOG("Triggering...");
+        std::cout << "Request " << i << ": \t";
+        if (requests[i].we)
+            std::cout << "write " << requests[i].data << 
+            " to " << requests[i].addr << std::endl;
+        else 
+            std::cout << "read from " << requests[i].addr << std::endl;
+            
         trigger.write(!trigger.read());
-        LOG("Waiting for response...");
 
         do {
             sc_start(clk.period());
         } while (cycles_count++ < cycles && !done.read());
+        controller.done.write(false);
 
         // Only count hits/misses status for read access
         if (!we.read()) {
@@ -73,29 +74,20 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
             }
         }
 
-        controller.done.write(false);
-
         if (!we.read()) {
             requests[i].data = output.read();
         }
 
-        ILOG("Result: " << output.read());
-
-        LOG("finished cycle");
-        
+        std::cout << "   Result: \t" << output.read() << std::endl;
+      
         if (cycles_count > cycles) {
-            break;
+            std::cerr << "cycles limit reached. Simulation stopped." << std::endl;
+            exit(EXIT_FAILURE);
         }
     }
 
     result.cycles = cycles_count;
-
     result.primitiveGateCount = controller.gates_count;
-
-    LOG("Total cycles: " << result.cycles);
-
-    // result.hits = controller.l1.hits_count + controller.l2.hits_count;
-    // result.hits = controller.l1.misses_count + controller.l2.misses_count;
 
     if (tf) {
         sc_close_vcd_trace_file(tf);

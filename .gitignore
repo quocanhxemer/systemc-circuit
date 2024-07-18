@@ -10,3 +10,4 @@ cache
 .vscode/
 
 out/
+*.vcd
