@@ -62,8 +62,7 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
 
         do {
             sc_start(clk.period());
-        } while (cycles_count++ < cycles && !controller.done.read());
-
+        } while (cycles_count++ < cycles && !done.read());
 
         // Only count hits/misses status for read access
         if (!we.read()) {
@@ -75,7 +74,12 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
         }
 
         controller.done.write(false);
-        ILOG("Result: " << controller.data_output.read());
+
+        if (!we.read()) {
+            requests[i].data = output.read();
+        }
+
+        ILOG("Result: " << output.read());
 
         LOG("finished cycle");
         
