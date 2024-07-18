@@ -23,7 +23,7 @@ extern struct Result run_simulation(
 int main(int argc, char *argv[]) {
     struct arguments *args = parse_args(argc, argv);
 
-    printf("Einstellungen:\n");
+    printf("<<-- Einstellungen -->> \n");
     printf("  cycles: %d\n", args->cycles);
     printf("  cacheline_size: %d\n", args->cacheLineSize);
     printf("  l1_lines: %d\n", args->l1CacheLines);
@@ -34,10 +34,10 @@ int main(int argc, char *argv[]) {
     if (args->tracefile != NULL) {
         printf("  tracefile: %s.vcd\n", args->tracefile);
     }
-    printf("  inputfile: %s\n", args->input_file);
+    printf("  inputfile: %s\n\n", args->input_file);
 
     struct csv_file_data data = csv_parse_file(args->input_file);
-    
+    printf("<<-- Simulation -->> \n");
     struct Result result = run_simulation(
             args->cycles,
             args->l1CacheLines,
