@@ -17,10 +17,11 @@ int gates_count_multiplexer(int outputs) {
         return -1;
     }
 
+    int temp = outputs;
     int not_gates = 0;
-    while (outputs != 1) {
+    while (temp != 1) {
         not_gates++;
-        outputs >>= 1;
+        temp >>= 1;
     }
 
     int and_gates = outputs;
@@ -30,6 +31,6 @@ int gates_count_multiplexer(int outputs) {
 }
 
 const int CONTROLL_LOGIC = 100;
-} // namespace gates_count_constants
+} // namespace gates_count
 
 #endif
