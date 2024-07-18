@@ -119,8 +119,6 @@ SC_MODULE(CONTROLLER) {
                 process();
                 running = false;
                 done->write(true);
-                // sc_core::wait(1);
-                // done->write(false);
             }
         }
     }
