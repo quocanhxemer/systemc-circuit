@@ -167,10 +167,11 @@ SC_MODULE(CACHE) {
         int storage =
             gates_count::STORE_BIT * 8 * cache_lines * cache_line_size;
         int read = gates_count::READ_BIT * 8 * cache_lines * cache_line_size;
-        int multiplexers = gates_count::gates_count_multiplexer(cache_lines);
+        int alu = gates_count::ALU;
+        int decoder = gates_count::gates_count_decoder(cache_lines);
         int controller = gates_count::CONTROLL_LOGIC;
 
-        return tags_compare + storage + read + multiplexers + controller;
+        return tags_compare + storage + read + alu + decoder + controller;
     }
 
     // Write back after read - cache miss. Has no latency
