@@ -23,7 +23,7 @@ extern struct Result run_simulation(
 int main(int argc, char *argv[]) {
     struct arguments *args = parse_args(argc, argv);
 
-    printf("<<-- Einstellungen -->> \n");
+    printf("<<-- Settings -->> \n");
     printf("  cycles: %d\n", args->cycles);
     printf("  cacheline_size: %d\n", args->cacheLineSize);
     printf("  l1_lines: %d\n", args->l1CacheLines);
