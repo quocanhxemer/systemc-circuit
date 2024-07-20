@@ -110,19 +110,19 @@ int checkValid(
     if (l1CacheLines > l2CacheLines) {
         fprintf(stderr, "ERROR: L1 Cache Lines müssen kleiner als L2 Cache Lines\n");
         fprintf(stderr,
-                "ERKLÄRUNG: Wenn L1 Caches gleich oder mehr Lines als L2, dann L1 Cache hat größere Größe als L2 Cache, im Widerspruch mit Inclusiv Cache\n");
+                "ERKLÄRUNG: Wenn L1 Caches mehr Lines als L2 hat, dann L1 Cache hat größere Größe als L2 Cache, im Widerspruch mit Inclusiv Cache\n");
         return 1;
     } else if (l1CacheLatency > l2CacheLatency) {
         fprintf(stderr,
-                "ERROR: L1 Cache Latency müssen kleiner als L2 Cache Latency, da Cache inklusiv ist. (Alles in L1 Cache kann man auch in L2 Cache finden)\n");
+                "ERROR: L1 Cache Latency muss kleiner oder gleich als L2 Cache Latency sein, da Cache inklusiv ist. (Alles in L1 Cache kann man auch in L2 Cache finden)\n");
         return 1;
     } else if (l2CacheLatency >= memoryLatency) {
         fprintf(stderr,
-                "ERROR: L2 Cache Latency müssen kleiner als Memory Latency, ansonsten Cache-Nutzung macht keinen Sinn.\n");
+                "ERROR: L2 Cache Latency muss kleiner als Memory Latency sein, ansonsten Cache-Nutzung macht keinen Sinn.\n");
         return 1;
     } else if (l1CacheLatency >= memoryLatency) {
         fprintf(stderr,
-                "ERROR: L1 Cache Latency müssen kleiner als Memory Latency, ansonsten Cache-Nutzung macht keinen Sinn.\n");
+                "ERROR: L1 Cache Latency muss kleiner als Memory Latency sein, ansonsten Cache-Nutzung macht keinen Sinn.\n");
         return 1;
     }
     //Warning but not invalid
