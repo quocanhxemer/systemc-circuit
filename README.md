@@ -8,11 +8,9 @@
 
 ## Motivation
 
-Caches sind heutzutage ein unverzichtbarer Bestandteil der PC-Architektur. Ihre effiziente Nutzung und Verwaltung ist entscheidend für die Leistungsfähigkeit moderner Computersysteme. Ein Cache fungiert als schneller Zwischenspeicher zwischen dem Prozessor und dem Hauptspeicher, wodurch häufig benötigte Daten schneller abgerufen werden können. Dies reduziert die Zugriffszeit auf Daten erheblich und verbessert die Gesamtperformance des Systems.
+Caches sind heutzutage ein unverzichtbarer Bestandteil der PC-Architektur. Eine effiziente Nutzung und Verwaltung ist entscheidend für die Leistungsfähigkeit moderner Systeme. Ein Cache ist einen schneller Zwischenspeicher zwischen dem Prozessor und dem Hauptspeicher, wodurch häufig benötigte Daten schneller abgerufen werden können. Dies reduziert die Zugriffszeit auf Daten und verbessert die Performance des Systems.
 
-Die zunehmende Komplexität moderner Anwendungen und die stetig wachsende Datenmenge stellen immer höhere Anforderungen an die Effizienz von Caches. Durch die Simulation und Analyse von Cache-Mechanismen können wir besser verstehen, wie unterschiedliche Strategien und Konfigurationen die Leistung beeinflussen. Dieses Wissen ist nicht nur theoretisch von Interesse, sondern hat auch praktische Anwendungen in der Optimierung realer Systeme.
-
-Unser Projekt zielt darauf ab, ein tieferes Verständnis für die Funktionsweise von Caches zu vermitteln und die Auswirkungen verschiedener Parameter und Strategien auf ihre Leistung zu analysieren. Durch die Implementierung und Simulation eines direkt assoziativen Write-Through-Caches möchten wir die theoretischen Konzepte in die Praxis umsetzen und wertvolle Einblicke in die Cache-Architektur gewinnen.
+Unser Projekt zielt darauf, ein tieferes Verständnis für die Funktionsweise von Caches zu entwiekeln und die Auswirkungen verschiedener Parameter und Strategien auf ihre Leistung zu analysieren. Durch die Implementierung und Simulation eines direkt assoziativen Write-Through-Caches möchten wir die theoretischen Konzepte in die Praxis umsetzen.
 
 ## Projektbeschreibung
 
@@ -47,8 +45,7 @@ Der Simulator kann für verschiedene Szenarien und Anwendungen eingesetzt werden
 
 ### Technische Einzelheiten
 
-Für die Simulation haben wir die SystemC-Bibliothek verwendet. SystemC ist eine vielseitige und weit verbreitete Bibliothek zur Modellierung von Hardware und zur Durchführung von Systemsimulationen. Mehr konnen Sie [hier](https://systemc.org/) erfahren
-
+Für die Simulation haben wir die [SystemC-Bibliothek](https://systemc.org/) verwendet. SystemC ist eine vielseitige und weit verbreitete Bibliothek zur Modellierung von Hardware und zur Durchführung von Systemsimulationen.
 
 ## Aufbau
 
