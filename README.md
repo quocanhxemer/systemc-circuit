@@ -48,6 +48,7 @@ Der Simulator kann für verschiedene Szenarien und Anwendungen eingesetzt werden
 Für die Simulation haben wir die [SystemC-Bibliothek](https://systemc.org/) verwendet. SystemC ist eine vielseitige und weit verbreitete Bibliothek zur Modellierung von Hardware und zur Durchführung von Systemsimulationen.
 
 #### Parametern
+
 - Positional arguments:
 
 | Parameter name | Default Wert           | Wert Typ     | Beschreibung                                              |
@@ -67,6 +68,38 @@ Für die Simulation haben wir die [SystemC-Bibliothek](https://systemc.org/) ver
 | --memory-latency | 10            |  Unsigned     | Die Latenzzeit des Hauptspeichers in Zyklen.       |
 | --tf=            | None          |  Path/zu/file | Ausgabedatei für ein Tracefile mit allen Signalen  |
 | -h/--help        |---------------|---------------| Help message zeigen                                |
+
+#### CSV-File
+
+Um cache operationen zum simulation uberzugeben unterstutzt unsere Program eine CSV-file ubergabe.
+Damit es erfolgreich gelesen werde soll es folgende Regeln folgen:
+Lese zugrif:
+
+| Operation | Address                 | Data |
+|-----------|-------------------------|------|
+| R         | decimal / 0xhexadecimal |------|
+
+Schreib zugrif:
+
+| Operation | Address                 | Data                    |
+|-----------|-------------------------|-------------------------|
+| R         | decimal / 0xhexadecimal | decimal / 0xhexadecimal |
+
+Einen [Beispiel](/examples/default.csv):
+
+```csv
+W 1 4
+R 1
+R 2
+W 2 3
+R 2
+W 0x4 0x5
+R 4
+R 2
+W 0x4 0x6
+W 6 7
+R 0x6
+```
 
 ## Aufbau
 
