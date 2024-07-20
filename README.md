@@ -83,7 +83,7 @@ Schreib zugrif:
 
 | Operation | Address                 | Data                    |
 |-----------|-------------------------|-------------------------|
-| R         | decimal / 0xhexadecimal | decimal / 0xhexadecimal |
+| W         | decimal / 0xhexadecimal | decimal / 0xhexadecimal |
 
 Einen [Beispiel](/examples/default.csv):
 
