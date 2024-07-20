@@ -82,11 +82,14 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
       
         if (cycles_count > cycles) {
             std::cerr << "cycles limit reached. Simulation stopped." << std::endl;
-            exit(EXIT_FAILURE);
+            break;
         }
     }
 
     result.cycles = cycles_count;
+    if (cycles_count > cycles) 
+        result.cycles = SIZE_MAX;
+
     result.primitiveGateCount = controller.gates_count;
 
     if (tf) {

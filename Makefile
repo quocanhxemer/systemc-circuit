@@ -67,6 +67,7 @@ debug: $(TARGET)
 
 # Release build
 release: CXXFLAGS += -O2
+release: CFLAGS += -O2
 release: $(TARGET)
 
 # Compile C++ source files
