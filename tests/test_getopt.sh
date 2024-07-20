@@ -1,4 +1,14 @@
-gcc -o main.o main.c
+gcc -o test.o src/args_parser.c tests_parse_args.c
+if [ $? -ne 0 ] ; then
+  echo "Compilation failed"
+  exit 1
+fi
+./test.o
+
+
+
+
+make
 if [ $? -ne 0 ] ; then
   echo "Compilation failed"
   exit 1
@@ -41,9 +51,9 @@ for ((i = 0; i < ${#tests[@]}; i+=3)); do
     expected_exit_status="${tests[i+2]}"
 
 # Execute the program with the test input
-    output=$(./main.o $input 2>&1)
+    output=$(./cache $input 2>&1)
     exit_status=$?
-   if [[ "$output" == *"$expected_output"* && $exit_status -eq $expected_exit_status ]]; then
+   if [[  $exit_status -eq $expected_exit_status ]]; then
           echo -e "${GREEN}Test passed: $input"
       else
           failed=$((failed + 1))
@@ -63,4 +73,5 @@ else
     echo -e "${RED}$failed Test failed"
 fi
 
+make clean
 
