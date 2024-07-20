@@ -107,12 +107,12 @@ int checkValid(
                unsigned l1CacheLatency,
                unsigned l2CacheLatency,
                unsigned memoryLatency) {
-    if (l1CacheLines >= l2CacheLines) {
+    if (l1CacheLines > l2CacheLines) {
         fprintf(stderr, "ERROR: L1 Cache Lines müssen kleiner als L2 Cache Lines\n");
         fprintf(stderr,
                 "ERKLÄRUNG: Wenn L1 Caches gleich oder mehr Lines als L2, dann L1 Cache hat größere Größe als L2 Cache, im Widerspruch mit Inclusiv Cache\n");
         return 1;
-    } else if (l1CacheLatency >= l2CacheLatency) {
+    } else if (l1CacheLatency > l2CacheLatency) {
         fprintf(stderr,
                 "ERROR: L1 Cache Latency müssen kleiner als L2 Cache Latency, da Cache inklusiv ist. (Alles in L1 Cache kann man auch in L2 Cache finden)\n");
         return 1;
