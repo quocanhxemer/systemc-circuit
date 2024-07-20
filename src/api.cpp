@@ -1,7 +1,5 @@
 #include "api.hpp"
 
-#include "debugKit.hpp"
-
 const int MEMORY_SIZE = 100;
 
 struct Result run_simulation(int cycles, unsigned l1CacheLines,
