@@ -49,12 +49,12 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
         input_data.write(requests[i].data);
         we.write(requests[i].we);
 
-        std::cout << "Request " << i << ": \t";
+        std::cout << "Anfrage " << i << ": \t";
         if (requests[i].we)
-            std::cout << "write " << requests[i].data << 
-            " to " << requests[i].addr << std::endl;
+            std::cout << "schreiben " << requests[i].data << 
+            " zu " << requests[i].addr << std::endl;
         else 
-            std::cout << "read from " << requests[i].addr << std::endl;
+            std::cout << "lesen von " << requests[i].addr << std::endl;
             
         trigger.write(!trigger.read());
 
@@ -76,10 +76,10 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
             requests[i].data = output.read();
         }
 
-        std::cout << "   Result: \t" << output.read() << std::endl;
+        std::cout << " Ergebnis: \t" << output.read() << std::endl;
       
         if (cycles_count > cycles) {
-            std::cerr << "cycles limit reached. Simulation stopped." << std::endl;
+            std::cerr << "Zyklenlimit erreicht. Simulation gestoppt." << std::endl;
             break;
         }
     }
