@@ -58,10 +58,10 @@ int main(int argc, char *argv[]) {
     printf("Cache Miss: \t\t\t%zu\n\n", result.misses);
 
     double hit_rate = (double)result.hits / (result.hits + result.misses);
-    printf("Read Hit rates: \t\t\t%.2f\n", hit_rate);
-    printf("Read Miss rates: \t\t\t%.2f\n\n", 1.0 - hit_rate);
+    printf("Read Hit rates: \t\t%.2f\n", hit_rate);
+    printf("Read Miss rates: \t\t%.2f\n\n", 1.0 - hit_rate);
     double avg = (double)result.cycles / data.lines;
-    printf("Average Cycles pro Memory Access: \t%.2f Cycles per Instruction \n", avg);
+    printf("Average pro Memory Access: \t%.2f Cycles per Instruction \n", avg);
     printf("Primitive Gate Count: \t\t%zu\n\n", result.primitiveGateCount);
 
     free(args);
