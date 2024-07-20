@@ -129,6 +129,7 @@ SC_MODULE(CACHE) {
     }
 
     void write_to_cache_line(unsigned line) {
+        caches[line].tag = tag_of(address->read());
         for (int i = offset_from->read(); i < offset_to->read(); i++) {
             caches[line].data[i] = data_input->read()[i - offset_from->read()];
         }
