@@ -9,7 +9,6 @@
 #include <unistd.h>
 
 #include <string.h>
-#include <errno.h>
 
 struct csv_file_data {
     size_t lines;
