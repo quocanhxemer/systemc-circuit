@@ -61,7 +61,7 @@ void mergeSort(int arr[], int l, int r, FILE *log) {
 }
 
 int main() {
-    int SIZE = 10;
+    int SIZE = 6;
     int arr[SIZE+5];
 
     FILE *log = fopen("../examples/merge_sort.csv", "w");

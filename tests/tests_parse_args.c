@@ -10,7 +10,7 @@
 struct arguments* parse_args(int argc, char **argv);
 //Test valid input
 void test_parse_args() {
-    char *argv1[] = {"./program", "--cacheline-size", "128", "--l1-lines", "512", "--l2-lines", "1024", "--l1-latency", "2", "--l2-latency", "20", "--memory-latency", "200", "--tf=tracefile", "examples/example1.csv"};
+    char *argv1[] = {"./program", "--cacheline-size", "128", "--l1-lines", "512", "--l2-lines", "1024", "--l1-latency", "2", "--l2-latency", "20", "--memory-latency", "200", "--tf=tracefile", "../examples/example1.csv"};
     int argc1 = sizeof(argv1) / sizeof(argv1[0]);
     struct arguments *args1 = parse_args(argc1, argv1);
     assert(args1->cycles == DEFAULT_CYCLES_VALUE);

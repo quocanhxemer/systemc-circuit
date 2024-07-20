@@ -4,6 +4,7 @@
 
 int partition(int arr[], int low, int high, FILE *log) {
     int pivot = arr[high];
+    //Da arr type integer, so Value von Integer ist 4 Byte aligned
     fprintf(log, "r %d\n", high*32);
     int i = low - 1;
 
@@ -18,9 +19,11 @@ int partition(int arr[], int low, int high, FILE *log) {
             fprintf(log, "w %d %d\n", j * 32, arr[j]);
         }
     }
+    //swap pivot element
     int temp = arr[i + 1];
     arr[i + 1] = arr[high];
     arr[high] = temp;
+    //Swap elemente wieder
     fprintf(log, "w %d %d\n", (i + 1)* 32, arr[i + 1]);
     fprintf(log, "w %d %d\n", high * 32, arr[high]);
     return (i + 1);
@@ -39,16 +42,15 @@ int main() {
     int arr[SIZE];
     for (int i = 0; i < SIZE; i++) {
         arr[i] = rand() % SIZE + 1;
-    }
-    FILE *log = fopen("../examples/quick_sort.csv", "w");
-    for (int i=0; i<SIZE; i++){
         fprintf(log, "w %d %d\n", i * 32, arr[i]);
     }
+    FILE *log = fopen("../examples/quick_sort.csv", "w");
+
     quickSort(arr, 0, 9, log);
-    fclose(log);
-    for (int i=0; i<SIZE;i++){
-        printf("%d ", arr[i]);
+    for (int i=0; i<SIZE; i++){
+        fprintf(log, "r %d\n", i * 32);
     }
+    fclose(log);
 
     return 0;
 }
