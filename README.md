@@ -51,9 +51,9 @@ Für die Simulation haben wir die [SystemC-Bibliothek](https://systemc.org/) ver
 
 - Positional arguments:
 
-| Parameter name | Default Wert           | Wert Typ     | Beschreibung                                              |
-|----------------|------------------------|--------------|-----------------------------------------------------------|
-| Dateiname      | ./examples/default.csv | Path/zu/file | Die Eingabedatei, die die zu verarbeitenden Daten enthält |
+| Parameter name | Default Wert         | Wert Typ     | Beschreibung                                              |
+|----------------|----------------------|--------------|-----------------------------------------------------------|
+| Dateiname      | examples/default.csv | Path/zu/file | Die Eingabedatei, die die zu verarbeitenden Daten enthält |
 
 - Optional arguments:
 

@@ -13,7 +13,7 @@ const char *help_msg =
         "--l2-latency <unsigned>     (default: %d)          — Die Latenzzeit des L2 Caches in Zyklen.\n"
         "--memory-latency <unsigned> (default: %d)         — Die Latenzzeit des Hauptspeichers in Zyklen.\n"
         "--tf=<Dateiname>                                  — Ausgabedatei für ein Tracefile mit allen Signalen\n"
-        "-h/--help                                         — Show help message\n";
+        "-h/--help                                         — Help message zeigen\n";
 
 const char *USAGE_MSG =
         "Usage: %s -h or --help         Show help message and exit\n"
