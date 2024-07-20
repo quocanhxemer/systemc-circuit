@@ -23,14 +23,14 @@ extern struct Result run_simulation(
 int main(int argc, char *argv[]) {
     struct arguments *args = parse_args(argc, argv);
 
-    printf("<<-- Settings -->> \n");
-    printf("  cycles: %d\n", args->cycles);
-    printf("  cacheline_size: %d\n", args->cacheLineSize);
+    printf("<<-- Einstelungen -->> \n");
+    printf("  cyclen: %d\n", args->cycles);
+    printf("  cacheline_grosse: %d\n", args->cacheLineSize);
     printf("  l1_lines: %d\n", args->l1CacheLines);
     printf("  l2_lines: %d\n", args->l2CacheLines);
-    printf("  l1_latency: %d\n", args->l1CacheLatency);
-    printf("  l2_latency: %d\n", args->l2CacheLatency);
-    printf("  memory_latency: %d\n", args->memoryLatency);
+    printf("  l1_latenz: %d\n", args->l1CacheLatency);
+    printf("  l2_latenz: %d\n", args->l2CacheLatency);
+    printf("  memory_latenz: %d\n", args->memoryLatency);
     if (args->tracefile != NULL) {
         printf("  tracefile: %s.vcd\n", args->tracefile);
     }
@@ -51,18 +51,18 @@ int main(int argc, char *argv[]) {
             args->tracefile
     );
 
-    printf("\n<<-- Statistics -->> \n");
+    printf("\n<<-- Statistiken -->> \n");
 
-    printf("Total Cycles: \t\t\t%zu\n\n", result.cycles);
-    printf("Cache Hits: \t\t\t%zu\n", result.hits);
-    printf("Cache Miss: \t\t\t%zu\n\n", result.misses);
+    printf("Zyklen gesamt: \t\t\t%zu\n\n", result.cycles);
+    printf("Cache-Treffer: \t\t\t%zu\n", result.hits);
+    printf("Cache-Fehler: \t\t\t%zu\n\n", result.misses);
 
     double hit_rate = (double)result.hits / (result.hits + result.misses);
-    printf("Read Hit rates: \t\t%.2f\n", hit_rate);
-    printf("Read Miss rates: \t\t%.2f\n\n", 1.0 - hit_rate);
+    printf("Trefferquote lesen: \t\t\t%.2f\n", hit_rate);
+    printf("Fehlerquote lesen: \t\t\t%.2f\n\n", 1.0 - hit_rate);
     double avg = (double)result.cycles / data.lines;
-    printf("Average pro Memory Access: \t%.2f Cycles per Instruction \n", avg);
-    printf("Primitive Gate Count: \t\t%zu\n\n", result.primitiveGateCount);
+    printf("Durchschnittliche Zyklen pro Speicherzugriff: \t%.2f Zyklen pro Anweisung \n", avg);
+    printf("Anzahl der primitiven Gates: \t\t%zu\n\n", result.primitiveGateCount);
 
     free(args);
     return 0;
