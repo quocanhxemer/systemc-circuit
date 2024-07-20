@@ -47,6 +47,27 @@ Der Simulator kann für verschiedene Szenarien und Anwendungen eingesetzt werden
 
 Für die Simulation haben wir die [SystemC-Bibliothek](https://systemc.org/) verwendet. SystemC ist eine vielseitige und weit verbreitete Bibliothek zur Modellierung von Hardware und zur Durchführung von Systemsimulationen.
 
+#### Parametern
+- Positional arguments:
+
+| Parameter name | Default Wert           | Wert Typ     | Beschreibung                                              |
+|----------------|------------------------|--------------|-----------------------------------------------------------|
+| Dateiname      | ./examples/default.csv | Path/zu/file | Die Eingabedatei, die die zu verarbeitenden Daten enthält |
+
+- Optional arguments:
+
+| Parameter name   | Default Wert  |  Wert Typ     | Beschreibung                                       |
+|------------------|---------------|---------------|----------------------------------------------------|
+| -c/--cycles      | 500           |  Integer      | Die Anzahl der Zyklen, die simuliert werden sollen.|
+| --cacheline-size | 4             |  Unsigned     | Die Größe einer Cachezeile in Byte.                |
+| --l1-lines       | 8             |  Unsigned     | Die Anzahl der Cachezeilen des L1 Caches.          |
+| --l2-lines       | 16            |  Unsigned     | Die Anzahl der Cachezeilen des L2 Caches.          |
+| --l1-latency     | 2             |  Unsigned     | Die Latenzzeit des L1 Caches in Zyklen.            |
+| --l2-latency     | 5             |  Unsigned     | Die Latenzzeit des L2 Caches in Zyklen.            |
+| --memory-latency | 10            |  Unsigned     | Die Latenzzeit des Hauptspeichers in Zyklen.       |
+| --tf=            | None          |  Path/zu/file | Ausgabedatei für ein Tracefile mit allen Signalen  |
+| -h/--help        |---------------|---------------| Help message zeigen                                |
+
 ## Aufbau
 
 ### Anforderungen
