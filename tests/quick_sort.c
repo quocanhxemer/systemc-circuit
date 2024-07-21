@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
+//WICHTIG!!!!!!!!!!!!!!!!!
+//Dieser File ist nur für Testing. Aus diesem File kann man examples/quick_sort.csv erstellen.
+//Dieser File schreibt input-File (in .csv datei) für QuickSort mit bestimmter Größe.
 int partition(int arr[], int low, int high, FILE *log) {
     int pivot = arr[high];
     //Da arr type integer, so Value von Integer ist 4 Byte aligned
@@ -38,18 +40,18 @@ void quickSort(int arr[], int low, int high, FILE *log) {
 }
 
 int main() {
-    int SIZE = 10;
+    int SIZE = 100000;
     int arr[SIZE];
+
+    FILE *log = fopen("../examples/quick_sort.csv", "w");
     for (int i = 0; i < SIZE; i++) {
         arr[i] = rand() % SIZE + 1;
         fprintf(log, "w %d %d\n", i * 32, arr[i]);
     }
-    FILE *log = fopen("../examples/quick_sort.csv", "w");
-
-    quickSort(arr, 0, 9, log);
-    for (int i=0; i<SIZE; i++){
-        fprintf(log, "r %d\n", i * 32);
-    }
+    quickSort(arr, 0, SIZE-1, log);
+//    for (int i=0; i<SIZE;i++){
+//        fprintf(log, "r %d \n", i*32);
+//    }
     fclose(log);
 
     return 0;

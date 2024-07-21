@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
+//WICHTIG!!!!!!!!!!!!!!!!!
+//Dieser File ist nur für Testing. Aus diesem File kann man examples/merge_sort.csv erstellen.
+//Dieser File schreibt input-File (in .csv datei) für MergeSort mit bestimmter Größe.
 void merge(int arr[], int l, int m, int r, FILE *log) {
     int n1 = m - l + 1;
     int n2 = r - m;
@@ -61,18 +63,17 @@ void mergeSort(int arr[], int l, int r, FILE *log) {
 }
 
 int main() {
-    int SIZE = 6;
+    int SIZE = 100000;
     int arr[SIZE+5];
-
     FILE *log = fopen("../examples/merge_sort.csv", "w");
     for (int i = 0; i < SIZE; i++) {
         arr[i] = rand() % SIZE + 1;
         fprintf(log, "w %d %d\n", i*32, arr[i]);
     }
     mergeSort(arr, 0, SIZE-1, log);
-    for (int i=0; i<SIZE;i++){
-        fprintf(log, "r %d \n", i*32);
-    }
+//    for (int i=0; i<SIZE;i++){
+//        fprintf(log, "r %d \n", i*32);
+//    }
     fclose(log);
 
     return 0;
