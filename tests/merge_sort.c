@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 //WICHTIG!!!!!!!!!!!!!!!!!
 //Dieser File ist nur für Testing. Aus diesem File kann man examples/merge_sort.csv erstellen.
@@ -63,7 +64,8 @@ void mergeSort(int arr[], int l, int r, FILE *log) {
 }
 
 int main() {
-    int SIZE = 100000;
+    srand(time(NULL));
+    int SIZE = 10;
     int arr[SIZE+5];
     FILE *log = fopen("../examples/merge_sort.csv", "w");
     for (int i = 0; i < SIZE; i++) {
@@ -71,9 +73,7 @@ int main() {
         fprintf(log, "w %d %d\n", i*32, arr[i]);
     }
     mergeSort(arr, 0, SIZE-1, log);
-//    for (int i=0; i<SIZE;i++){
-//        fprintf(log, "r %d \n", i*32);
-//    }
+
     fclose(log);
 
     return 0;

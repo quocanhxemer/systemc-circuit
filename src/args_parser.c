@@ -37,8 +37,6 @@ void print_help(const char *progname) {
             DEFAULT_MEMORY_LATENCY_VALUE);
 }
 
-// nameCase
-// duplicateOption????
 void printDuplicateOption(const char *optionName) {
     fprintf(stderr, "ERROR: Option %s wurde mehrmals eingegeben\n", optionName);
 }
@@ -125,10 +123,6 @@ int checkValid(
                 "ERROR: L1 Cache Latency muss kleiner als Memory Latency sein, ansonsten Cache-Nutzung macht keinen Sinn.\n");
         return 1;
     }
-    //Warning but not invalid
-//    if (l1CacheLatency>cycles){
-//        fprintf(stderr, "WARNING: L1 Latency ist größer als cycles, deswegen kann wahrscheinlich keine Requests bearbeitet werden\n");
-//    }
     if (l1CacheLatency >= 100) {
         fprintf(stderr, "WARNING: L1 CacheLatency ist größer als normal\n");
     }
@@ -294,10 +288,6 @@ int check_trace_file(char *filename) {
 
 struct arguments *parse_args(int argc, char **argv) {
     const char *progname = argv[0];
-//    if (argc == 1) {
-//        print_usage(progname);
-//        exit(EXIT_FAILURE);
-//    }
 
     int opt;
     int option_index = 0;
@@ -517,9 +507,7 @@ struct arguments *parse_args(int argc, char **argv) {
     args->l1CacheLatency = l1Latency;
     args->l2CacheLatency = l2Latency;
     args->memoryLatency = memLatency;
-//    if (tf_Flags && traceFile != NULL) {
-//        args->tracefile = traceFile;
-//    }
+
     if (tf_Flags) {
         //Check if the directory existiert und valid filename
         if (check_trace_file(traceFile) != 0) {
@@ -530,7 +518,3 @@ struct arguments *parse_args(int argc, char **argv) {
     args->input_file = fileInputName;
     return args;
 }
-////DEBUG
-//int main(int argc, char* args[]){
-//    check_trace_file("//file1");
-//}

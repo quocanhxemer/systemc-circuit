@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
 
 //WICHTIG!!!!!!!!!!!!!!!!!
@@ -40,7 +41,8 @@ void quickSort(int arr[], int low, int high, FILE *log) {
 }
 
 int main() {
-    int SIZE = 100000;
+    srand(time(NULL));
+    int SIZE = 10;
     int arr[SIZE];
 
     FILE *log = fopen("../examples/quick_sort.csv", "w");
@@ -49,9 +51,7 @@ int main() {
         fprintf(log, "w %d %d\n", i * 32, arr[i]);
     }
     quickSort(arr, 0, SIZE-1, log);
-//    for (int i=0; i<SIZE;i++){
-//        fprintf(log, "r %d \n", i*32);
-//    }
+
     fclose(log);
 
     return 0;
