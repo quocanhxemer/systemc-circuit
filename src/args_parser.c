@@ -5,15 +5,15 @@ const char *help_msg =
         "<Dateiname>  (default: %s)    — Die Eingabedatei, die die zu verarbeitenden Daten enthält\n"
         "\n"
         "Optional arguments:\n"
-        "-c <int> /--cycles <int>    (default: %d)        — Die Anzahl der Zyklen, die simuliert werden sollen.\n"
-        "--cacheline-size <unsigned> (default: %d)          — Die Größe einer Cachezeile in Byte.\n"
-        "--l1-lines <unsigned>       (default: %d)          — Die Anzahl der Cachezeilen des L1 Caches.\n"
-        "--l2-lines <unsigned>       (default: %d)         — Die Anzahl der Cachezeilen des L2 Caches.\n"
-        "--l1-latency <unsigned>     (default: %d)          — Die Latenzzeit des L1 Caches in Zyklen.\n"
-        "--l2-latency <unsigned>     (default: %d)          — Die Latenzzeit des L2 Caches in Zyklen.\n"
-        "--memory-latency <unsigned> (default: %d)         — Die Latenzzeit des Hauptspeichers in Zyklen.\n"
-        "--tf=<Dateiname>                                  — Ausgabedatei für ein Tracefile mit allen Signalen\n"
-        "-h/--help                                         — Help message zeigen\n";
+        "-c <int> /--cycles   <int>        (default: %4d)   — Die Anzahl der Zyklen, die simuliert werden sollen.\n"
+        "--cacheline-size     <unsigned>   (default: %4d)   — Die Größe einer Cachezeile in Byte.\n"
+        "--l1-lines           <unsigned>   (default: %4d)   — Die Anzahl der Cachezeilen des L1 Caches.\n"
+        "--l2-lines           <unsigned>   (default: %4d)   — Die Anzahl der Cachezeilen des L2 Caches.\n"
+        "--l1-latency         <unsigned>   (default: %4d)   — Die Latenzzeit des L1 Caches in Zyklen.\n"
+        "--l2-latency         <unsigned>   (default: %4d)   — Die Latenzzeit des L2 Caches in Zyklen.\n"
+        "--memory-latency     <unsigned>   (default: %4d)   — Die Latenzzeit des Hauptspeichers in Zyklen.\n"
+        "--tf=<Dateiname>                                   — Ausgabedatei für ein Tracefile mit allen Signalen\n"
+        "-h/--help                                          — Help message zeigen\n";
 
 const char *USAGE_MSG =
         "Usage: %s -h or --help         Show help message and exit\n"
