@@ -128,7 +128,7 @@ SC_MODULE(CONTROLLER) {
         uint32_t last_byte = first_byte + 3;
 
         // In case address isn't aligned with the cache line
-        // or the cache line is smaller than 4 byte (whyyy)
+        // or the cache line is smaller than 4 byte
         int cache_lines_count =
             cache_line_of(last_byte) - cache_line_of(first_byte) + 1;
 
@@ -149,7 +149,7 @@ SC_MODULE(CONTROLLER) {
                             0, cacheLineSize,
                             data8 - aligned_offset + i * cacheLineSize);
             }
-            // TODO: super ugly code
+            
             int rest_bits = cacheLineSize - aligned_offset;
             access_line(get_aligned_address(last_byte), 0, 4 - rest_bits,
                         data8 + rest_bits);
