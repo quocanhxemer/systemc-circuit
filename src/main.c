@@ -61,9 +61,16 @@ int main(int argc, char *argv[]) {
     printf("Trefferquote lesen: \t\t\t%.2f\n", hit_rate);
     printf("Fehlerquote lesen: \t\t\t%.2f\n\n", 1.0 - hit_rate);
     // Durchschnittliche cycles/instruction (Inclusiv auch Write)
-    double avg = (double)result.cycles / data.lines;
-    printf("Durchschnittliche Zyklen pro Speicherzugriff: \t%.2f Zyklen pro Anweisung \n", avg);
-    printf("Anzahl der primitiven Gates: \t\t%zu\n\n", result.primitiveGateCount);
+    if (result.cycles<SIZE_MAX){
+        double avg = (double)result.cycles / data.lines;
+        printf("Durchschnittliche Zyklen pro Speicherzugriff: \t%.2f Zyklen pro Anweisung \n", avg);
+        printf("Anzahl der primitiven Gates: \t\t%zu\n\n", result.primitiveGateCount);
+    }
+    else{
+        printf("Input Cycles ist nicht genug für die gesamte Statistik!!!\n");
+        printf("Bitte versuche nochmals mit größeren Cycles\n");
+    }
+
 
     free(args);
     return 0;
