@@ -502,8 +502,9 @@ struct arguments *parse_args(int argc, char **argv) {
     if (optind < argc) {
         fprintf(stderr, "Unbekannte Arguments: ");
         while (optind < argc) {
-            printf("%s ", argv[optind++]);
+            fprintf(stderr, "%s ", argv[optind++]);
         }
+        fprintf(stderr, "\n");
         free(args);
         exit(EXIT_FAILURE);
     }
