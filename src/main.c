@@ -56,10 +56,11 @@ int main(int argc, char *argv[]) {
     printf("Zyklen gesamt: \t\t\t%zu\n\n", result.cycles);
     printf("Cache-Treffer: \t\t\t%zu\n", result.hits);
     printf("Cache-Fehler: \t\t\t%zu\n\n", result.misses);
-
+    //Wir zählen nur read hits und read miss.
     double hit_rate = (double)result.hits / (result.hits + result.misses);
     printf("Trefferquote lesen: \t\t\t%.2f\n", hit_rate);
     printf("Fehlerquote lesen: \t\t\t%.2f\n\n", 1.0 - hit_rate);
+    // Durchschnittliche cycles/instruction (Inclusiv auch Write)
     double avg = (double)result.cycles / data.lines;
     printf("Durchschnittliche Zyklen pro Speicherzugriff: \t%.2f Zyklen pro Anweisung \n", avg);
     printf("Anzahl der primitiven Gates: \t\t%zu\n\n", result.primitiveGateCount);

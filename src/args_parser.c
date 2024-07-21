@@ -150,6 +150,7 @@ int is_file_name_valid(const char *filename) {
         fprintf(stderr, "ERROR: TraceFile \"%s\" hat invalid Characters: %c\n",filename, *t);
         return 1;
     }
+
     //When filename has valid length
     if (strlen(filename) > 255) {
         fprintf(stderr, "ERROR: TraceFile Name ist zu lang!\n");
@@ -248,7 +249,7 @@ int check_trace_file(char *filename) {
     //filename has .vcd at the end -> append filename to the end
     size_t n = strlen(filename);
     char newFilename[n + 5];
-    //newFilename has ".vcd" extensio
+    //newFilename has ".vcd" extension
     strncpy(newFilename, filename, n);
     newFilename[n] = '.';
     newFilename[n + 1] = 'v';
@@ -271,7 +272,7 @@ int check_trace_file(char *filename) {
         //if the directory exists, then check, if the filename is valid or not
         if (does_dir_exist(directory)) {
             //strdup1 : ist nur strcpy mit malloc
-            char *dup_filename = strdup1(filename);
+            char *dup_filename = strdup1(newFilename);
             //basename: filename
             char *only_filename = basename(dup_filename);
             //Check if tracefile has valid name
@@ -481,7 +482,6 @@ struct arguments *parse_args(int argc, char **argv) {
         free(args);
         exit(EXIT_FAILURE);
     }
-    //Fail if missing the optional arguments (Eingabe Datei)
 //    if (optind == argc) {
 //        fprintf(stderr, "%s: Es fehlt die positionale Argument (Eingabe Datei)\n", progname);
 //        print_usage(progname);
@@ -508,6 +508,7 @@ struct arguments *parse_args(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
+    //Ergebnis von Input Optionen und defaults value
     args->cycles = (int) cycles;
     args->cacheLineSize = lineSize;
     args->l1CacheLines = l1Line;
@@ -519,6 +520,7 @@ struct arguments *parse_args(int argc, char **argv) {
 //        args->tracefile = traceFile;
 //    }
     if (tf_Flags) {
+        //Check if the directory existiert und valid filename
         if (check_trace_file(traceFile) != 0) {
             exit(EXIT_FAILURE);
         }

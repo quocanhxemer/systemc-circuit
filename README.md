@@ -8,9 +8,9 @@
 
 ## Motivation
 
-Caches sind heutzutage ein unverzichtbarer Bestandteil der PC-Architektur. Eine effiziente Nutzung und Verwaltung ist entscheidend für die Leistungsfähigkeit moderner Systeme. Ein Cache ist einen schneller Zwischenspeicher zwischen dem Prozessor und dem Hauptspeicher, wodurch häufig benötigte Daten schneller abgerufen werden können. Dies reduziert die Zugriffszeit auf Daten und verbessert die Performance des Systems.
+Caches sind heutzutage ein unverzichtbarer Bestandteil der PC-Architektur. Eine effiziente Nutzung und Verwaltung ist entscheidend für die Leistungsfähigkeit moderner Systeme. Ein Cache ist ein schneller Zwischenspeicher zwischen dem Prozessor und dem Hauptspeicher, wodurch häufig benötigte Daten schneller abgerufen werden können. Dies reduziert die Zugriffszeit auf Daten und verbessert die Performance des Systems.
 
-Unser Projekt zielt darauf, ein tieferes Verständnis für die Funktionsweise von Caches zu entwiekeln und die Auswirkungen verschiedener Parameter und Strategien auf ihre Leistung zu analysieren. Durch die Implementierung und Simulation eines direkt assoziativen Write-Through-Caches möchten wir die theoretischen Konzepte in die Praxis umsetzen.
+Unser Projekt zielt darauf, ein tieferes Verständnis für die Funktionsweise von Caches zu entwickeln und die Auswirkungen verschiedener Parameter und Strategien auf ihre Leistung zu analysieren. Durch die Implementierung und Simulation eines direkt assoziativen Write-Through-Caches möchten wir die theoretischen Konzepte in die Praxis umsetzen.
 
 ## Projektbeschreibung
 
@@ -71,15 +71,15 @@ Für die Simulation haben wir die [SystemC-Bibliothek](https://systemc.org/) ver
 
 #### CSV-File
 
-Um cache operationen zum simulation uberzugeben unterstutzt unsere Program eine CSV-file ubergabe.
-Damit es erfolgreich gelesen werde soll es folgende Regeln folgen:
-Lese zugrif:
+Um cache operationen zum simulation überzugeben unterstützt unsere Program eine CSV-file Übergabe.
+Damit es erfolgreich gelesen wird, soll es folgende Regeln folgen:
+Lesezugriff:
 
 | Operation | Address                 | Data |
 |-----------|-------------------------|------|
 | R         | decimal / 0xhexadecimal |------|
 
-Schreib zugrif:
+Schreibzugriff:
 
 | Operation | Address                 | Data                    |
 |-----------|-------------------------|-------------------------|
@@ -139,5 +139,6 @@ make
 	- examples
 - Tuan Khang Nguyen: 
 	- Args_parsing
+    - Simulation testen
 	- slides
 	- examples
