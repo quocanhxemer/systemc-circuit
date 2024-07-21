@@ -1,20 +1,21 @@
-gcc -o test.o src/args_parser.c tests_parse_args.c
+#Test for valid input (in tests_parse_args.c) and invalid input (unten)
+gcc -o test.o ../src/args_parser.c tests_parse_args.c
 if [ $? -ne 0 ] ; then
   echo "Compilation failed"
   exit 1
 fi
 ./test.o
 
+rm -rf test.o
 
 
-
-make
+cd .. && make
 if [ $? -ne 0 ] ; then
   echo "Compilation failed"
   exit 1
 fi
 
-#Test should fail
+#Test should fail (basic invalid option)
 tests=( #Fehlt arguments
         "--cycles" "./main.o: option '--cycles' requires an argument" 1
         "-c" "./main.o: option requires an argument -- 'c'" 1
@@ -53,6 +54,7 @@ for ((i = 0; i < ${#tests[@]}; i+=3)); do
 # Execute the program with the test input
     output=$(./cache $input 2>&1)
     exit_status=$?
+    #if tests passed
    if [[  $exit_status -eq $expected_exit_status ]]; then
           echo -e "${GREEN}Test passed: $input"
       else
