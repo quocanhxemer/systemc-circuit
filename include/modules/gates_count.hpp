@@ -21,9 +21,10 @@ int gates_count_decoder(int outputs) {
     }
 
     // To decode and assign a k-bit cache index, we need (according to the truth
-    // table) k not-gates for every bits, 2^k and-gates and one or gate
+    // table) k not-gates for every bits and 2^k and-gates 
     // Example: 2-bit input and 4 outputs:
-    // f = AB + (notA)B + A(notB) + (notA)(notB)
+    // 4 outputs: AB - (notA)B - A(notB) - (notA)(notB)
+    // only one of the above expressions returns true, corresponding to the selected cache line
 
     // not_gates = log2 (outputs)
     int temp = outputs;
@@ -34,9 +35,8 @@ int gates_count_decoder(int outputs) {
     }
 
     int and_gates = outputs;
-    int or_gates = 1;
 
-    return not_gates + and_gates + or_gates;
+    return not_gates + and_gates;
 }
 
 const int CONTROLL_LOGIC = 100;

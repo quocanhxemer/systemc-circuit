@@ -61,6 +61,7 @@ SC_MODULE(CACHE) {
         this->clk.bind(clk);
 
         caches = new cache_line[cache_lines];
+        // initialize cachelines
         for (int i = 0; i < cache_lines; i++) {
             caches[i].data = new uint8_t[cache_line_size];
             for (int k = 0; k < cache_line_size; k++) {
