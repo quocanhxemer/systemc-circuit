@@ -14,7 +14,7 @@ Unser Projekt zielt darauf, ein tieferes Verständnis für die Funktionsweise vo
 
 ## Projektbeschreibung
 
-In diesem Projekt haben wir eine Simulation eines direkt assoziativen Write-Through-Caches implementiert. Der Cache-Simulator unterstützt grundlegende Operationen wie das Lesen und Schreiben von Daten und simuliert die Cache-Treffer und -Fehlerraten unter verschiedenen Bedingungen. Die Simulation hilft, die Auswirkungen verschiedener Cache-Parameter wie Cache-Größe, Blockgröße und Assoziativität zu analysieren.
+In diesem Projekt haben wir eine Simulation eines direkt assoziativen Write-Through-Caches implementiert. Der Cache-Simulator unterstützt grundlegende Operationen wie das Lesen und Schreiben von Daten und simuliert die Cache-Treffer und -Fehlerraten unter verschiedenen Bedingungen. Die Simulation hilft, die Auswirkungen verschiedener Cache-Parameter wie Cache-Größe, Blockgröße und Assoziativität zu analysieren Mehr [hier](report.md)
 
 ### Funktionsweise des Simulators
 
@@ -122,23 +122,3 @@ Dies startet die Kompilierung des Projekts. Alternativ können Sie das Projekt m
 make
 ./cache
 ``` 
-
-## Arbeitsteilung
-
-- Ivan Logvynenko: 
-	- CSV-parsing
-	- Makefile
-	- README.md
-	- slides
-	- run_simulation
-	- examples
-- Nguyen Quoc Anh Pham: 
-	- Cache
-	- slides
-	- run_simulation
-	- examples
-- Tuan Khang Nguyen: 
-	- Args_parsing
-    - Simulation testen
-	- slides
-	- examples
