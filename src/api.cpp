@@ -32,6 +32,7 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
         sc_trace(tf, done, "done");
     }
 
+    //bindings
     controller.address.bind(address);
     controller.data_input.bind(input_data);
     controller.we.bind(we);
@@ -44,11 +45,14 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
     size_t i = 0;
     int cycles_count = 0;
     sc_start(SC_ZERO_TIME);
+
     for (i = 0; i < numRequests; i++) {
+        // fil signals
         address.write(requests[i].addr);
         input_data.write(requests[i].data);
         we.write(requests[i].we);
 
+        // output request
         std::cout << "Anfrage " << i << ": \t";
         if (requests[i].we)
             std::cout << "schreiben " << requests[i].data << 
@@ -56,11 +60,13 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
         else 
             std::cout << "lesen von " << requests[i].addr << std::endl;
             
+        // start cache execution
         trigger.write(!trigger.read());
 
         do {
             sc_start(clk.period());
         } while (cycles_count++ < cycles && !done.read());
+        // reset signals
         controller.done.write(false);
 
         // Only count hits/misses status for read access
@@ -72,12 +78,15 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
             }
         }
 
+        // if read request, write result back to memory
         if (!we.read()) {
             requests[i].data = output.read();
         }
 
+        // output result to console
         std::cout << " Ergebnis: \t" << output.read() << std::endl;
-      
+    
+        // stop simulation if cycles exceeded
         if (cycles_count > cycles) {
             std::cerr << "Zyklenlimit erreicht. Simulation gestoppt." << std::endl;
             break;

@@ -23,6 +23,7 @@ extern struct Result run_simulation(
 int main(int argc, char *argv[]) {
     struct arguments *args = parse_args(argc, argv);
 
+    //print all arguments
     printf("<<-- Einstelungen -->> \n");
     printf("  cyclen: %d\n", args->cycles);
     printf("  cacheline_grosse: %d\n", args->cacheLineSize);
@@ -36,7 +37,10 @@ int main(int argc, char *argv[]) {
     }
     printf("  inputfile: %s\n\n", args->input_file);
 
+    // read csv file
     struct csv_file_data data = csv_parse_file(args->input_file);
+
+    //start simulation
     printf("<<-- Simulation -->> \n");
     struct Result result = run_simulation(
             args->cycles,
@@ -51,15 +55,18 @@ int main(int argc, char *argv[]) {
             args->tracefile
     );
 
+    // output statistics
     printf("\n<<-- Statistiken -->> \n");
 
     printf("Zyklen gesamt: \t\t\t%zu\n\n", result.cycles);
     printf("Cache-Treffer: \t\t\t%zu\n", result.hits);
     printf("Cache-Fehler: \t\t\t%zu\n\n", result.misses);
+
     //Wir zählen nur read hits und read miss.
     double hit_rate = (double)result.hits / (result.hits + result.misses);
     printf("Trefferquote lesen: \t\t\t%.2f\n", hit_rate);
     printf("Fehlerquote lesen: \t\t\t%.2f\n\n", 1.0 - hit_rate);
+
     // Durchschnittliche cycles/instruction (Inclusiv auch Write)
     if (result.cycles<SIZE_MAX){
         double avg = (double)result.cycles / data.lines;
@@ -70,7 +77,6 @@ int main(int argc, char *argv[]) {
         printf("Input Cycles ist nicht genug für die gesamte Statistik!!!\n");
         printf("Bitte versuche nochmals mit größeren Cycles\n");
     }
-
 
     free(args);
     return 0;
