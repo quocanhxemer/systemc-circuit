@@ -10,7 +10,7 @@ struct Result run_simulation(int cycles, unsigned l1CacheLines,
 
     struct Result result = {0};
 
-    sc_clock clk("clk", 1, SC_SEC);
+    sc_clock clk("clk", 1, SC_NS);
 
     CONTROLLER controller("controller", clk, l1CacheLines, l2CacheLines,
                           cacheLineSize, l1CacheLatency, l2CacheLatency,
